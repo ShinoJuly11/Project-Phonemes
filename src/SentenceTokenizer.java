@@ -69,16 +69,6 @@ public class SentenceTokenizer {
     //    kn|lf|ll|lm|mb|mm|ng|nn|oe|oo|or|ou|ey|ew|ph|pn|pp|ps|qu|
     //    rh|rr|sc|se|ss|st|th|tt|ue|ui|ur|uy|ve|wn|wr|ze|zz|[a-z]"
 
-    // Constants are easy to map as theyre just constants
-    // vowels we will run into ambiguity i need Maschin learnin to solve ambiguity
-
-    // the implementation here is so dogshit
-    // i know theres a better way of doing it
-
-    //this is like solving the texttographemes without HMM/DNN solutions so
-    //it will struggle against words like 'read' past tense or present tense
-    // or cake
-
     public List<String> graphemeChunker(List<String> listOfWords){
         //List<String> listOfwords = this.sToken.getArrayString();
         List<String> graphemes = new ArrayList<String>(); // to store each graphemes
