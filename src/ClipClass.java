@@ -1,9 +1,12 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.SequenceInputStream;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -17,22 +20,22 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * 
  */
 
-public class ClipClass implements Runnable{
+public class ClipClass{
 
     Clip clip;
     AudioInputStream audioStream;
     int start, end, duration, startFrame, endFrame;
+    File musicFile;
 
     public ClipClass(File file) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        this.musicFile = file;
         this.audioStream = AudioSystem.getAudioInputStream(file);
         this.clip = AudioSystem.getClip();
 
-        // convert frames
         this.end = clip.getFrameLength();
         this.start = 0;
         this.duration = (int)((clip.getFrameLength() / clip.getFormat().getFrameRate()) * 1000);
 
-        this.clip.open(this.audioStream);
 
     }
 
@@ -41,25 +44,44 @@ public class ClipClass implements Runnable{
         this.endFrame = endFrame;
     }
 
-    public void playback(int startFrame, int endFrame) throws InterruptedException{
-        this.clip.setFramePosition(startFrame);
+    public void playback() throws InterruptedException, LineUnavailableException, IOException, UnsupportedAudioFileException{
+        
+        changeSampleRate(30_000);
         this.clip.start();
         do {
-            modulateVolume();
+            Thread.sleep(100);
+            
         }
         while (this.clip.isRunning());
     }
 
-    public void run(){
-        try {
-            playback(this.startFrame, this.endFrame);
-        } catch (InterruptedException e) {
-            //idk if this works but OH WELL :)
-            e.printStackTrace();
-        }
+    private void changeSampleRate(float targetRate) throws LineUnavailableException, IOException, UnsupportedAudioFileException{
+
+        AudioFormat sourceFormat = this.clip.getFormat();
+
+        AudioFormat targetFormat = new AudioFormat(
+                                                sourceFormat.getEncoding(),
+                                                targetRate,
+                                                sourceFormat.getSampleSizeInBits(),
+                                                sourceFormat.getChannels(),
+                                                sourceFormat.getFrameSize(),
+                                                targetRate,
+                                                sourceFormat.isBigEndian()
+                                                );
+
+
+        //now i need to recreate the clip class
+        AudioInputStream convertedStream = new AudioInputStream(this.audioStream, targetFormat, this.audioStream.getFrameLength());
+
+        // Prepare new clip with converted format
+        DataLine.Info info = new DataLine.Info(Clip.class, targetFormat);
+        this.clip = (Clip) AudioSystem.getLine(info);
+        this.clip.open(convertedStream);
+
+        System.out.println(this.clip.getFormat().getSampleRate());
     }
 
-    public void close(){
+    public void close(){    
         this.clip.close();
     }
 
@@ -68,7 +90,7 @@ public class ClipClass implements Runnable{
         // this needs changing
         // double sec = this.clip.getMicrosecondPosition() * 0.000_001;
 
-        int frame = (this.clip.getFramePosition() % (this.endFrame - this.startFrame)); // to make it not dependent on the position
+        int frame = (this.clip.getFramePosition() % (this.endFrame - this.startFrame+1)); // to make it not dependent on the position
         double onewave = (1 / this.clip.getFormat().getFrameRate()); // 1 sec / 48k hz = 0.0000208 sec per hz
         double sec = frame * onewave; // im not getting an internship with this shenanigans
 
