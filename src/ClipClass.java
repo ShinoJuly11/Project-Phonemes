@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.SequenceInputStream;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -58,7 +59,6 @@ public class ClipClass{
 
     public void playback() throws InterruptedException, LineUnavailableException, IOException, UnsupportedAudioFileException{
         
-        changeSampleRate(18_000);
         this.clip.start();
         do {
             Thread.sleep(100);
@@ -66,9 +66,10 @@ public class ClipClass{
         while (this.clip.isRunning());
     }
 
-    private void changeSampleRate(float targetRate) throws LineUnavailableException, IOException, UnsupportedAudioFileException{
+    public File sampleRate(File file, float targetRate) throws Exception{
 
-        AudioFormat sourceFormat = this.clip.getFormat();
+        AudioInputStream ais = AudioSystem.getAudioInputStream(file);
+        AudioFormat sourceFormat = ais.getFormat();
 
         AudioFormat targetFormat = new AudioFormat(
                                                 sourceFormat.getEncoding(),
@@ -83,12 +84,11 @@ public class ClipClass{
         //now i need to recreate the clip class
         AudioInputStream convertedStream = new AudioInputStream(this.audioStream, targetFormat, this.audioStream.getFrameLength());
 
-        // Prepare new clip with converted format
-        DataLine.Info info = new DataLine.Info(Clip.class, targetFormat);
-        this.clip = (Clip) AudioSystem.getLine(info);
-        this.clip.open(convertedStream);
+       File outFile = new File("sound/temp.wav");
+       AudioSystem.write(convertedStream, AudioFileFormat.Type.WAVE, outFile);
 
-        System.out.println(this.clip.getFormat().getSampleRate());
+       return outFile;
+
     }
 
     public void close(){    
