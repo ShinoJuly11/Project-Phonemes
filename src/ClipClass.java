@@ -27,14 +27,26 @@ public class ClipClass{
     int start, end, duration, startFrame, endFrame;
     File musicFile;
 
-    public ClipClass(File file) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        this.musicFile = file;
+    public ClipClass(File file){
+        try {
+        this.musicFile = file;  
         this.audioStream = AudioSystem.getAudioInputStream(file);
         this.clip = AudioSystem.getClip();
-
         this.end = clip.getFrameLength();
         this.start = 0;
         this.duration = (int)((clip.getFrameLength() / clip.getFormat().getFrameRate()) * 1000);
+        }
+        catch (UnsupportedAudioFileException e) {
+            System.out.println(e.getMessage());
+
+        }
+        catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+
+        catch (LineUnavailableException e){
+            System.out.println(e.getMessage());
+        }
 
 
     }
@@ -46,11 +58,10 @@ public class ClipClass{
 
     public void playback() throws InterruptedException, LineUnavailableException, IOException, UnsupportedAudioFileException{
         
-        changeSampleRate(30_000);
+        changeSampleRate(18_000);
         this.clip.start();
         do {
             Thread.sleep(100);
-            
         }
         while (this.clip.isRunning());
     }
@@ -68,7 +79,6 @@ public class ClipClass{
                                                 targetRate,
                                                 sourceFormat.isBigEndian()
                                                 );
-
 
         //now i need to recreate the clip class
         AudioInputStream convertedStream = new AudioInputStream(this.audioStream, targetFormat, this.audioStream.getFrameLength());
