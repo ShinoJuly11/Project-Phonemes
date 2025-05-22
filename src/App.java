@@ -8,7 +8,7 @@ import javax.sound.sampled.*; // the only dependancy in this whole thing
 
 public class App {
     public static void main(String[] args) throws Exception {
-        test_TimeStretcher();
+        test_solaAlgorithm();
 
         
 
@@ -59,6 +59,19 @@ public class App {
         clip1.start();
         Thread.sleep(50);
 
+    }
+
+    private static void test_solaAlgorithm() throws Exception{
+
+        File file1 = new File("sound/Ko.wav");
+        File file2 = new File("sound/fe.wav");
+
+        AudioInputStream ais1  = AudioSystem.getAudioInputStream(file1);
+        AudioInputStream ais2  = AudioSystem.getAudioInputStream(file2);
+
+        SolaAlgorithm sola = new SolaAlgorithm();
+        //sola.playback(sola.wavToChunks(sound1 , 0.1f));
+        sola.overlap(ais1, ais2);
     }
         
 
