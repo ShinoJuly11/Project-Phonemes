@@ -2,7 +2,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.sound.sampled.*;
 
 
@@ -73,7 +72,7 @@ public class SolaAlgorithm {
 
     }
 
-    public AudioInputStream bufferAudio(AudioInputStream ais) throws Exception{
+    private byte[] AISToByte(AudioInputStream ais) throws Exception{
         int bufferSize = 4096;
         byte[] buffer = new byte[bufferSize];
         int byteRead;
@@ -86,11 +85,48 @@ public class SolaAlgorithm {
         
         byte[] audioBytes = baos.toByteArray();
 
-        ByteArrayInputStream bais1 = new ByteArrayInputStream(audioBytes);
-        AudioInputStream ais2 = new AudioInputStream(bais1, ais.getFormat(), ais.getFrameLength());
+        return audioBytes;
 
-        return ais2;
+        
+    }
 
+    public AudioInputStream overlapAudio(AudioInputStream[] aisArray) throws Exception{
+
+         ArrayList<byte[]> audioBytesList = new ArrayList<>();
+         int startFrame = 0;
+
+        for (AudioInputStream ais : aisArray){
+            byte[] audioBytes = AISToByte(ais);
+            audioBytesList.add(audioBytes);
+
+
+        }
+
+        byte[] returnByte = overlapAudio(audioBytesList.get(0),
+                                             audioBytesList.get(1),
+                                            24000,
+                                            aisArray[0].getFormat());
+
+                startFrame += audioBytesList.get(0).length / aisArray[0].getFormat().getFrameSize() / 2.5;
+                
+                
+        for (int x = 2; x < audioBytesList.size(); x++){
+                returnByte = overlapAudio(returnByte,
+                                            audioBytesList.get(x),
+                                            startFrame,
+                                            aisArray[0].getFormat());
+
+                startFrame += audioBytesList.get(x).length / aisArray[x].getFormat().getFrameSize() / 2.5;
+
+        }
+
+        long length = returnByte.length / aisArray[0].getFormat().getFrameSize();
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(returnByte);
+        AudioInputStream returnAIS = new AudioInputStream(bais, aisArray[0].getFormat(), length);
+        System.out.println(length);
+
+        return returnAIS;
         
     }
 
@@ -117,7 +153,7 @@ public class SolaAlgorithm {
 
         long framelength1 = audioBytes1.length / ais1.getFormat().getFrameSize();
         long framelength2 = audioBytes2.length / ais2.getFormat().getFrameSize();
-        long frameLength = (framelength1 + framelength2);
+        long frameLength = (framelength1 + framelength2 - 28000);
 
         //long frameLength = returnByte.length / ais1.getFormat().getFrameSize();
         ByteArrayInputStream bais1 = new ByteArrayInputStream(returnByte);
@@ -130,30 +166,36 @@ public class SolaAlgorithm {
     // this is just chatgpt but i really need to learn how to manipulate bytes
     //for mixing
     private byte[] overlapAudio(byte[] music, byte[] overlay, int startFrame, AudioFormat format) {
-        int frameSize = format.getFrameSize();  // e.g., 2 bytes for 16-bit mono
+        int frameSize = format.getFrameSize();
         int startByte = startFrame * frameSize;
+
+        int newLength = Math.max(music.length, startByte + overlay.length);
+        byte[] result = new byte[newLength];
+
+        // Copy original music to result
+        System.arraycopy(music, 0, result, 0, music.length);
 
         for (int i = 0; i < overlay.length - 1; i += 2) {
             int musicIndex = startByte + i;
-            if (musicIndex + 1 >= music.length) break; // avoid overflow
+            if (musicIndex + 1 >= result.length) break;
 
-            // Convert to shorts
-            short musicSample = (short) ((music[musicIndex + 1] << 8) | (music[musicIndex] & 0xff));
+            short musicSample = 0;
+            if (musicIndex + 1 < music.length) {
+                musicSample = (short) ((result[musicIndex + 1] << 8) | (result[musicIndex] & 0xff));
+            }
+
             short overlaySample = (short) ((overlay[i + 1] << 8) | (overlay[i] & 0xff));
 
-            // Mix and clamp
             int mixed = musicSample + overlaySample;
             mixed = Math.max(Math.min(mixed, Short.MAX_VALUE), Short.MIN_VALUE);
 
-            // Write back
-            music[musicIndex] = (byte) (mixed & 0xff);
-            music[musicIndex + 1] = (byte) ((mixed >> 8) & 0xff);
+            result[musicIndex] = (byte) (mixed & 0xff);
+            result[musicIndex + 1] = (byte) ((mixed >> 8) & 0xff);
         }
 
-    return music;
+        return result;
     }
 
-    //@Override
     public void playback(ArrayList<SolaClass> solaArray) throws Exception{
 
         byte[] buffer = new byte[4096];

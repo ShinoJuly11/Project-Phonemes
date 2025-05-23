@@ -1,25 +1,15 @@
 import java.io.File;
 import java.io.IOException;
-import java.io.SequenceInputStream;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-/**
- * 
- * Clip class handles the creation of the Clip audio line and playback
- * 
- * Basic DSP with overlap-add using java sound
- * need to implement SONA soon
- * 
- */
 
 public class ClipClass{
 

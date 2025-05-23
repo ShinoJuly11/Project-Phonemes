@@ -1,15 +1,19 @@
-import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.SequenceInputStream;
 import java.util.Scanner;
 
 import javax.sound.sampled.*; // the only dependancy in this whole thing
 
+import be.tarsos.dsp.AudioDispatcher;
+import be.tarsos.dsp.PitchShifter;
+import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
+import be.tarsos.dsp.io.jvm.AudioPlayer;
+
 
 public class App {
     public static void main(String[] args) throws Exception {
-        test_solaAlgorithm();
+        test_solaAlgorithm_overlapAudio();
 
 
     };
@@ -72,25 +76,51 @@ public class App {
         //sola.playback(sola.wavToChunks(sound1 , 0.1f));
         AudioInputStream ais3 = sola.overlapTwoAudio(ais1, ais2);
 
-        byte[] bufferedAudio = ais3.readAllBytes();
-        
-        AudioInputStream newAis = new AudioInputStream(
-        new ByteArrayInputStream(bufferedAudio),
-        ais3.getFormat(),
-        bufferedAudio.length / ais3.getFormat().getFrameSize()
-        );
-
-        AudioInputStream ais4 = sola.overlapTwoAudio(newAis, ais2);
-
         System.out.println(ais3.getFrameLength());
         System.out.println(ais1.getFrameLength());
         System.out.println(ais2.getFrameLength());
-        System.out.println(ais4.getFrameLength());
 
+        File outfile = new File("sound/temp.wav");
+        AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outfile);
+    }
 
-        File outFile = new File("sound/temp.wav");
-        AudioSystem.write(ais4, AudioFileFormat.Type.WAVE, outFile);
+    private static void test_solaAlgorithm_overlapAudio() throws Exception{
+
+        File file1 = new File("sound/Ko.wav");
+        File file2 = new File("sound/fe.wav");
+
+        AudioInputStream ais1 = AudioSystem.getAudioInputStream(file1);
+        AudioInputStream ais2 = AudioSystem.getAudioInputStream(file2);
+        AudioInputStream ais3  = AudioSystem.getAudioInputStream(file2);
+        AudioInputStream ais4  = AudioSystem.getAudioInputStream(file2);
+        AudioInputStream ais5  = AudioSystem.getAudioInputStream(file2);
+
+        AudioInputStream[] aisArray = {ais1,ais2,ais3,ais4,ais5};
+
+        SolaAlgorithm sa = new SolaAlgorithm();
+        AudioInputStream ais = sa.overlapAudio(aisArray);
         
+        File file = new File("sound/temp.wav");
+        AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
+
+        
+    }
+
+    private static void test_tarsosdsp() throws Exception{
+
+        String filePath = "sound/temp.wav";
+        AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filePath));
+        int sampleRate = (int) ais.getFormat().getSampleRate();
+        int bufferSize = 512;
+        int overlap = 500;
+
+
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromFile(new File("sound/temp.wav"),bufferSize,overlap);
+        
+        dispatcher.addAudioProcessor(new PitchShifter(1f,ais.getFormat().getSampleRate(),bufferSize,overlap));
+        dispatcher.addAudioProcessor(new AudioPlayer(dispatcher.getFormat()));
+
+        new Thread(dispatcher).start();
     }
         
 
