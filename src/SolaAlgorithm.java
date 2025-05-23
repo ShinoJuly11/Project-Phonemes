@@ -27,8 +27,6 @@ public class SolaAlgorithm {
         this.ais = ais;
 
     }
-        
-
 }
 
     public ArrayList<SolaClass> wavToChunks(File file, float chunkDur) throws Exception{
@@ -75,41 +73,28 @@ public class SolaAlgorithm {
 
     }
 
-    public void mixTwoClips(AudioInputStream ais1, AudioInputStream ais2) throws Exception{
-
+    public AudioInputStream bufferAudio(AudioInputStream ais) throws Exception{
         int bufferSize = 4096;
-        byte[] buffer1 = new byte[bufferSize];
-        byte[] buffer2 = new byte[bufferSize];
-        byte[] mixed = new byte[4096];
+        byte[] buffer = new byte[bufferSize];
+        int byteRead;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        int byteRead1, byteRead2;
-
-        //read the buffers from two files;
-
-        while(((byteRead1 = ais1.read(buffer1)) != -1) && ((byteRead2 = ais2.read(buffer2)) != -1)){
-
-            for (int i = 0; i < byteRead1; i += 2) {
-
-            // Convert bytes to 16-bit samples
-            short sample1 = (short)((buffer1[i+1] << 8) | (buffer1[i] & 0xff));
-            short sample2 = (short)((buffer2[i+1] << 8) | (buffer2[i] & 0xff));
-
-            // Mix samples
-            int mixedSample = sample1 + sample2;
-
-            // Clamp to 16-bit range
-            mixedSample = Math.max(Math.min(mixedSample, Short.MAX_VALUE), Short.MIN_VALUE);
-
-            // Convert back to bytes
-            mixed[i]   = (byte)(mixedSample & 0xff);
-            mixed[i+1] = (byte)((mixedSample >> 8) & 0xff);
-
-            }
-            
+        //while bytes are not empty
+        while ((byteRead = ais.read(buffer)) != -1){
+            baos.write(buffer, 0, byteRead);
         }
+        
+        byte[] audioBytes = baos.toByteArray();
+
+        ByteArrayInputStream bais1 = new ByteArrayInputStream(audioBytes);
+        AudioInputStream ais2 = new AudioInputStream(bais1, ais.getFormat(), ais.getFrameLength());
+
+        return ais2;
+
+        
     }
 
-    public void overlap(AudioInputStream ais1, AudioInputStream ais2) throws Exception{
+    public AudioInputStream overlapTwoAudio(AudioInputStream ais1, AudioInputStream ais2) throws Exception{
 
         int bufferSize = 4096;
         byte[] buffer1 = new byte[bufferSize];
@@ -126,20 +111,24 @@ public class SolaAlgorithm {
 
         byte[] audioBytes1 = baos1.toByteArray();
         byte[] audioBytes2 = baos2.toByteArray();
+        int startFrame = 28000;
 
-        byte[] returnByte = overlapAudio(audioBytes1, audioBytes2, 28000, ais1.getFormat());
-        long frameLength = returnByte.length / ais1.getFormat().getFrameSize();
+        byte[] returnByte = overlapAudio(audioBytes1, audioBytes2, startFrame, ais1.getFormat());
+
+        long framelength1 = audioBytes1.length / ais1.getFormat().getFrameSize();
+        long framelength2 = audioBytes2.length / ais2.getFormat().getFrameSize();
+        long frameLength = (framelength1 + framelength2);
+
+        //long frameLength = returnByte.length / ais1.getFormat().getFrameSize();
         ByteArrayInputStream bais1 = new ByteArrayInputStream(returnByte);
         AudioInputStream ais3 = new AudioInputStream(bais1, ais1.getFormat(), frameLength);
 
-        File outFile = new File("sound/temp.wav");
-        AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outFile);
-
+        return ais3;
         
 }
 
-
     // this is just chatgpt but i really need to learn how to manipulate bytes
+    //for mixing
     private byte[] overlapAudio(byte[] music, byte[] overlay, int startFrame, AudioFormat format) {
         int frameSize = format.getFrameSize();  // e.g., 2 bytes for 16-bit mono
         int startByte = startFrame * frameSize;
@@ -163,8 +152,6 @@ public class SolaAlgorithm {
 
     return music;
     }
-
-
 
     //@Override
     public void playback(ArrayList<SolaClass> solaArray) throws Exception{

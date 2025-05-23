@@ -1,3 +1,4 @@
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.SequenceInputStream;
@@ -9,8 +10,6 @@ import javax.sound.sampled.*; // the only dependancy in this whole thing
 public class App {
     public static void main(String[] args) throws Exception {
         test_solaAlgorithm();
-
-        
 
 
     };
@@ -71,7 +70,27 @@ public class App {
 
         SolaAlgorithm sola = new SolaAlgorithm();
         //sola.playback(sola.wavToChunks(sound1 , 0.1f));
-        sola.overlap(ais1, ais2);
+        AudioInputStream ais3 = sola.overlapTwoAudio(ais1, ais2);
+
+        byte[] bufferedAudio = ais3.readAllBytes();
+        
+        AudioInputStream newAis = new AudioInputStream(
+        new ByteArrayInputStream(bufferedAudio),
+        ais3.getFormat(),
+        bufferedAudio.length / ais3.getFormat().getFrameSize()
+        );
+
+        AudioInputStream ais4 = sola.overlapTwoAudio(newAis, ais2);
+
+        System.out.println(ais3.getFrameLength());
+        System.out.println(ais1.getFrameLength());
+        System.out.println(ais2.getFrameLength());
+        System.out.println(ais4.getFrameLength());
+
+
+        File outFile = new File("sound/temp.wav");
+        AudioSystem.write(ais4, AudioFileFormat.Type.WAVE, outFile);
+        
     }
         
 
