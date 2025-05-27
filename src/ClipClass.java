@@ -56,6 +56,22 @@ public class ClipClass{
         while (this.clip.isRunning());
     }
 
+    public AudioInputStream playFrameRange(AudioInputStream originalAis, long startFrame, Long endFrame) throws Exception{
+        
+        AudioFormat format = originalAis.getFormat();
+        int frameSize = format.getFrameSize();
+        long numFrames = endFrame - startFrame;
+
+        // Skip to the starting frame (in bytes)
+        long bytesToSkip = startFrame * frameSize;
+        originalAis.skip(bytesToSkip);
+
+        // Create a new AudioInputStream limited to the selected range
+        AudioInputStream selectedAis = new AudioInputStream(originalAis, format, numFrames);
+
+        return selectedAis;
+    }
+
     public File sampleRate(File file, float targetRate) throws Exception{
 
         AudioInputStream ais = AudioSystem.getAudioInputStream(file);

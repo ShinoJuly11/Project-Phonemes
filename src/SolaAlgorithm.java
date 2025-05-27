@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import javax.sound.sampled.*;
 
 
-public class SolaAlgorithm {
-
+public class SolaAlgorithm{
+    // just an empty constructor lol wut
     public SolaAlgorithm(){
 
     }
@@ -20,7 +20,7 @@ public class SolaAlgorithm {
     ByteArrayInputStream bais;
     AudioInputStream ais;
 
-    protected SolaClass(ByteArrayInputStream bais, AudioInputStream ais){
+    public SolaClass(ByteArrayInputStream bais, AudioInputStream ais){
 
         this.bais = bais;
         this.ais = ais;
@@ -29,6 +29,8 @@ public class SolaAlgorithm {
 }
 
     public ArrayList<SolaClass> wavToChunks(File file, float chunkDur) throws Exception{
+
+        //honestly reading this idk what this does anymore
 
         AudioInputStream ais = AudioSystem.getAudioInputStream(file);
         AudioFormat format = ais.getFormat();
@@ -48,7 +50,6 @@ public class SolaAlgorithm {
         
         while ((bytesRead = ais.read(buffer)) > 0){
 
-
             // added this i really need to learn how to actually manipulate bytes
             //this makes a copy of the buffer so every bais and ais have a 
             //clean buffer
@@ -63,11 +64,6 @@ public class SolaAlgorithm {
             SolaClassArray.add(solaChunk);
 
         }
-
-        // for (SolaClass sc : SolaClassArray){
-        //     System.out.println(sc.ais + " " + sc.bais);
-        // }
-
         return SolaClassArray;
 
     }
@@ -82,41 +78,111 @@ public class SolaAlgorithm {
         while ((byteRead = ais.read(buffer)) != -1){
             baos.write(buffer, 0, byteRead);
         }
-        
+
         byte[] audioBytes = baos.toByteArray();
 
-        return audioBytes;
-
-        
+        return audioBytes; 
     }
+
+public AudioInputStream volumeAudio(AudioInputStream ais, float volumeGradient) throws Exception{
+
+        byte[] audioBytes = AISToByte(ais);
+        int frameSize = ais.getFormat().getFrameSize();
+
+        for (int x = 0; x < (ais.getFrameLength() / frameSize); x++){
+            int byteIndex = x * frameSize;
+            short sample = (short) ((audioBytes[byteIndex+1] << 8) | (audioBytes[byteIndex] & 0xff));
+
+            sample = (short) (sample * volumeGradient);
+
+            audioBytes[byteIndex] = (byte) (sample & 0xff);
+            audioBytes[byteIndex + 1] = (byte) ((sample >> 8) & 0xff);
+
+        }
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
+        AudioInputStream returnAIS = new AudioInputStream(bais, ais.getFormat(), ais.getFrameLength());
+
+        return returnAIS;
+
+    }
+    
+    public AudioInputStream fadeOutAudio(AudioInputStream ais, int fadeFrames) throws Exception{
+
+        byte[] audioBytes = AISToByte(ais);
+        int frameSize = ais.getFormat().getFrameSize();
+        int totalFrames = (int) ais.getFrameLength();
+        int startFrame = totalFrames - fadeFrames;
+        if (startFrame < 0) startFrame = 0;
+
+        for (int x = startFrame; x < totalFrames; x++){
+
+            float fadeFactor = 1.0f - ((float)(x - startFrame) / fadeFrames); // 1 -> 0
+
+            int byteIndex = x * frameSize;
+            short sample = (short) ((audioBytes[byteIndex+1] << 8) | (audioBytes[byteIndex] & 0xff));
+            sample = (short) (sample * fadeFactor);
+
+            // Write back
+            audioBytes[byteIndex] = (byte) (sample & 0xff);
+            audioBytes[byteIndex + 1] = (byte) ((sample >> 8) & 0xff);
+
+        }
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
+        AudioInputStream returnAIS = new AudioInputStream(bais, ais.getFormat(), ais.getFrameLength());
+
+        return returnAIS;
+
+    }
+    public AudioInputStream fadeInAudio(AudioInputStream ais, int fadeFrames) throws Exception{
+
+        byte[] audioBytes = AISToByte(ais);
+        int frameSize = ais.getFormat().getFrameSize();
+        int totalFrames = (int) ais.getFrameLength();
+
+        for (int x = 0; x < totalFrames; x++){
+
+            float fadeFactor = (float)(x) / fadeFrames; // 0 -> 1
+
+            int byteIndex = x * frameSize;
+            short sample = (short) ((audioBytes[byteIndex+1] << 8) | (audioBytes[byteIndex] & 0xff));
+
+            sample = (short) (sample * fadeFactor);
+
+            // Write back
+            audioBytes[byteIndex] = (byte) (sample & 0xff);
+            audioBytes[byteIndex + 1] = (byte) ((sample >> 8) & 0xff);
+
+        }
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
+        AudioInputStream returnAIS = new AudioInputStream(bais, ais.getFormat(), ais.getFrameLength());
+
+        return returnAIS;
+
+    }
+
 
     public AudioInputStream overlapAudio(AudioInputStream[] aisArray) throws Exception{
 
          ArrayList<byte[]> audioBytesList = new ArrayList<>();
-         int startFrame = 0;
 
         for (AudioInputStream ais : aisArray){
             byte[] audioBytes = AISToByte(ais);
             audioBytesList.add(audioBytes);
-
-
         }
 
-        byte[] returnByte = overlapAudio(audioBytesList.get(0),
-                                             audioBytesList.get(1),
-                                            24000,
-                                            aisArray[0].getFormat());
-
-                startFrame += audioBytesList.get(0).length / aisArray[0].getFormat().getFrameSize() / 2.5;
-                
-                
-        for (int x = 2; x < audioBytesList.size(); x++){
+        byte[] returnByte = audioBytesList.get(0);
+        int startFrame = 24000; // needs fixing later
+                   
+        for (int x = 1; x < audioBytesList.size(); x++){
                 returnByte = overlapAudio(returnByte,
                                             audioBytesList.get(x),
                                             startFrame,
-                                            aisArray[0].getFormat());
+                                            aisArray[x].getFormat());
 
-                startFrame += audioBytesList.get(x).length / aisArray[x].getFormat().getFrameSize() / 2.5;
+                startFrame += 24000;
 
         }
 
@@ -129,6 +195,7 @@ public class SolaAlgorithm {
         return returnAIS;
         
     }
+    
 
     public AudioInputStream overlapTwoAudio(AudioInputStream ais1, AudioInputStream ais2) throws Exception{
 

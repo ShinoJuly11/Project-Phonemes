@@ -13,7 +13,7 @@ import be.tarsos.dsp.io.jvm.AudioPlayer;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        test_solaAlgorithm_overlapAudio();
+        test_solaAlgorithm_fadeOutAudio();
 
 
     };
@@ -84,6 +84,33 @@ public class App {
         AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outfile);
     }
 
+     private static void test_solaAlgorithm_volume() throws Exception{
+
+        File file1 = new File("sound/hello.wav");
+
+        AudioInputStream ais1 = AudioSystem.getAudioInputStream(file1);
+
+        SolaAlgorithm sola = new SolaAlgorithm();
+        //sola.playback(sola.wavToChunks(sound1 , 0.1f));
+        AudioInputStream ais3 = sola.volumeAudio(ais1, 3f);
+
+        File outfile = new File("sound/volume_3.wav");
+        AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outfile);
+    }
+
+    private static void test_solaAlgorithm_fadeOutAudio() throws Exception{
+
+        File file1 = new File("sound/hello.wav");
+
+        AudioInputStream ais1 = AudioSystem.getAudioInputStream(file1);
+
+        SolaAlgorithm sola = new SolaAlgorithm();
+        AudioInputStream ais3 = sola.fadeInAudio(ais1, 100000);
+
+        File outfile = new File("sound/volume_FadeIn.wav");
+        AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outfile);
+    }
+
     private static void test_solaAlgorithm_overlapAudio() throws Exception{
 
         File file1 = new File("sound/Ko.wav");
@@ -114,10 +141,9 @@ public class App {
         int bufferSize = 512;
         int overlap = 500;
 
-
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromFile(new File("sound/temp.wav"),bufferSize,overlap);
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromFile(new File("sound/temp2.wav"),bufferSize,overlap);
         
-        dispatcher.addAudioProcessor(new PitchShifter(1f,ais.getFormat().getSampleRate(),bufferSize,overlap));
+        dispatcher.addAudioProcessor(new PitchShifter(1.5f,ais.getFormat().getSampleRate(),bufferSize,overlap));
         dispatcher.addAudioProcessor(new AudioPlayer(dispatcher.getFormat()));
 
         new Thread(dispatcher).start();
