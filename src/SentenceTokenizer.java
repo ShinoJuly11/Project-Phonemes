@@ -67,14 +67,9 @@ public class SentenceTokenizer {
     //    iew|igh|oeu|our|uoy|ae|ai|ar|au|ay|bb|cc|ce|ch|ci|ck|dd|
     //    di|ea|ee|ei|eo|er|et|eu|ew|ey|ff|ft|ge|gg|gh|gn|gu|ie|is|
     //    kn|lf|ll|lm|mb|mm|ng|nn|oe|oo|or|ou|ey|ew|ph|pn|pp|ps|qu|
-<<<<<<< HEAD
     //    rh|rr|sc|se|ss|st|th|tt|ue|ui|ur|uy|ve|wn|wr|ze|zz|[a-z]|[A-Z]"
-=======
     //    rh|rr|sc|se|ss|st|th|tt|ue|ui|ur|uy|ve|wn|wr|ze|zz|[a-z]"
-<<<<<<< HEAD
-=======
->>>>>>> main
->>>>>>> TarsosDSP
+
 
     public List<String> graphemeChunker(List<String> listOfWords){
         //List<String> listOfwords = this.sToken.getArrayString();
