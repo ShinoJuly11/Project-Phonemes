@@ -16,13 +16,22 @@ import be.tarsos.dsp.io.jvm.AudioPlayer;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        test_solaAlgorithm_fadeOutAudio();
+        test_NoteUi();
+        
 
 
     };
 
 
     // test for text to graphemes
+
+    private static void test_NoteUi() throws Exception{
+        File file1 = new File("sound/hello.wav");
+        Phoneme phoneme = new Phoneme(file1,0,0,0,0,0,0);
+        NoteUi ni = new NoteUi(phoneme);
+        ni.createBox();
+
+    }
 
     private static void test_SentenceTokenizer(){
         Scanner scanner = new Scanner(System.in);
