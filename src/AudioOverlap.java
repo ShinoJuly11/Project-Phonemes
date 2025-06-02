@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
-import LEGACYFILES.AudioOverlapInterface;
-
-
 public class AudioOverlap{
 
     public AudioInputStream overlapAudio(AudioInputStream[] aisArray) throws Exception{
@@ -65,7 +62,7 @@ public class AudioOverlap{
 
         long framelength1 = audioBytes1.length / ais1.getFormat().getFrameSize();
         long framelength2 = audioBytes2.length / ais2.getFormat().getFrameSize();
-        long frameLength = (framelength1 + framelength2 - 28000);
+        long frameLength = (framelength1 + framelength2 - startFrame);
 
         //long frameLength = returnByte.length / ais1.getFormat().getFrameSize();
         ByteArrayInputStream bais1 = new ByteArrayInputStream(returnByte);

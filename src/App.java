@@ -5,6 +5,9 @@ import java.util.Scanner;
 
 import javax.sound.sampled.*; // the only dependancy in this whole thing
 
+import LEGACYFILES.ClipClass;
+import LEGACYFILES.SolaAlgorithm;
+import LEGACYFILES.TimeStretch;
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.PitchShifter;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
