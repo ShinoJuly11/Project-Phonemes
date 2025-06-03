@@ -27,7 +27,7 @@ public class App {
 
     private static void test_NoteUi() throws Exception{
         File file1 = new File("sound/hello.wav");
-        Phoneme phoneme = new Phoneme(file1,0,0,0,0,0,0);
+        Phoneme phoneme = new Phoneme(file1,1,2,3,4,5,6);
         NoteUi ni = new NoteUi(phoneme);
         ni.createBox();
 
