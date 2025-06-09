@@ -1,12 +1,38 @@
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioInputStream;
 
-import LEGACYFILES.AudioVolumeInterface;
+    /**
+     * 
+     * AudioVolume class stores all the Byte manipulation algorithms.
+     * 
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     * 
+     * @see volumeAudio
+     * @see fadeOutAudio
+     * @see fadeInAudio
+     * 
+     */
 
-public class AudioVolume implements AudioVolumeInterface{
-    @Override
+public class AudioVolume{
+
+    /**
+     * 
+     * increasing or decreasing the gain of the audio.
+     * 
+     * @param ais - AudioInputStream
+     * @param volumeGradient - float
+     * @throws Exception usually AudioInputStream related errors 
+     * @return AudioInputStream
+     * 
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     * 
+     */
+
     public AudioInputStream volumeAudio(AudioInputStream ais, float volumeGradient) throws Exception {
 
         byte[] audioBytes = AISToByte(ais);
@@ -29,7 +55,22 @@ public class AudioVolume implements AudioVolumeInterface{
         return returnAIS;
 
     }
-    @Override
+
+    /**
+     * 
+     * Decreases the gain from the starting frame (fadeFrames) to the end of the array frames.
+     * 
+     * @param ais - AudioInputStream
+     * @param fadeFrames - integer
+     * @throws Exception usually AudioInputStream related errors 
+     * @return AudioInputStream
+     * 
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     * 
+     */
+
     public AudioInputStream fadeOutAudio(AudioInputStream ais, int fadeFrames) throws Exception{
 
         byte[] audioBytes = AISToByte(ais);
@@ -58,7 +99,23 @@ public class AudioVolume implements AudioVolumeInterface{
         return returnAIS;
 
     }
-    @Override
+
+    /**
+     * 
+     * increasing the gain from from the start of the frame array to the the selected frame (fadeFrames).
+     * 
+     * @param ais - AudioInputStream
+     * @param fadeFrames - integer
+     * @throws Exception usually AudioInputStream related errors 
+     * @return AudioInputStream
+     * 
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     * 
+     */
+
+    
     public AudioInputStream fadeInAudio(AudioInputStream ais, int fadeFrames) throws Exception{
 
         byte[] audioBytes = AISToByte(ais);
@@ -86,6 +143,20 @@ public class AudioVolume implements AudioVolumeInterface{
         return returnAIS;
 
     }
+
+        /**
+     * 
+     * Decreases the gain from the starting frame (fadeFrames) to the end of the array frames.
+     * 
+     * @param ais - AudioInputStream
+     * @throws Exception usually AudioInputStream related errors 
+     * @return byte[] - An array of the audio file but in bytes
+     * 
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     * 
+     */
 
     private byte[] AISToByte(AudioInputStream ais) throws Exception{
             int bufferSize = 4096;

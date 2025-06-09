@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class NoteUi{
     
-
     Phoneme phoneme;
 
     class GraphPlotGraph extends JPanel {

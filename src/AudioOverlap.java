@@ -8,6 +8,18 @@ import javax.sound.sampled.AudioInputStream;
 
 public class AudioOverlap{
 
+    /**
+     * Overlaps multiple AudioInputStreams into a single stream.
+     *
+     * @param aisArray an array of AudioInputStreams to be overlapped
+     * @return a new AudioInputStream with the overlapped audio
+     * @throws Exception if any input stream has incompatible format or on read/write errors
+     *
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     */
+
     public AudioInputStream overlapAudio(AudioInputStream[] aisArray) throws Exception{
 
          ArrayList<byte[]> audioBytesList = new ArrayList<>();
@@ -39,6 +51,20 @@ public class AudioOverlap{
         return returnAIS;
         
     }
+
+    /**
+     * Overlaps two AudioInputStreams, starting the second at the specified frame in the first.
+     *
+     * @param ais1 the base AudioInputStream
+     * @param ais2 the AudioInputStream to overlay
+     * @param startFrame the frame index in ais1 where ais2 should start
+     * @return a new AudioInputStream with the overlapped result
+     * @throws Exception if an error occurs during processing
+     *
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     */
     
     public AudioInputStream overlapTwoAudio(AudioInputStream ais1, AudioInputStream ais2, int startFrame) throws Exception{
 
@@ -72,6 +98,19 @@ public class AudioOverlap{
         
     }
 
+    /**
+     * Merges two AudioInputStreams sequentially, with clip2 appended to clip1.
+     *
+     * @param clip1 the first AudioInputStream
+     * @param clip2 the second AudioInputStream
+     * @return a new AudioInputStream containing the merged audio
+     * @throws Exception if formats are incompatible or errors occur during merging
+     *
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     */
+
     public AudioInputStream mergeTwoClips(AudioInputStream clip1, AudioInputStream clip2) throws Exception {
         AudioFormat format = clip1.getFormat();
 
@@ -85,8 +124,20 @@ public class AudioOverlap{
 
     }
 
-    // this is just chatgpt but i really need to learn how to manipulate bytes
-    //for mixing
+    /**
+     * Overlaps two raw audio byte arrays at a specified frame using the given format.
+     * @implNote Rewrite needed 
+     *
+     * @param music the base audio byte array
+     * @param overlay the audio byte array to overlay
+     * @param startFrame the starting frame index for the overlay
+     * @param format the AudioFormat describing the data
+     * @return a byte array containing the overlapped result
+     *
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     * @author ShinoJuly11
+     */
     private byte[] overlapAudio(byte[] music, byte[] overlay, int startFrame, AudioFormat format) {
         int frameSize = format.getFrameSize();
         int startByte = startFrame * frameSize;

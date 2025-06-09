@@ -71,6 +71,16 @@ public class SentenceTokenizer {
     //    rh|rr|sc|se|ss|st|th|tt|ue|ui|ur|uy|ve|wn|wr|ze|zz|[a-z]"
 
 
+    /**
+     * Chunks graphemes from a list of words into sub-units for processing.
+     *
+     * @param listOfWords the list of words to be chunked
+     * @return a list of grapheme chunks
+     *
+     * @since v0.5.4 - 09/06/25
+     * @version 1
+     */
+    
     public List<String> graphemeChunker(List<String> listOfWords){
         //List<String> listOfwords = this.sToken.getArrayString();
         List<String> graphemes = new ArrayList<String>(); // to store each graphemes
