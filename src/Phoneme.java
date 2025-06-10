@@ -82,6 +82,16 @@ public class Phoneme{
         this.preuttrance = preuttrance;
     }
 
+    public void printAll(){
+        System.out.println(offset);
+        System.out.println(overlap);
+        System.out.println(cutoff);
+        System.out.println(preuttrance);
+        System.out.println(audioLoopStart);
+        System.out.println(audioLoopEnd);
+        
+    }
+
 }
 
 
