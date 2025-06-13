@@ -18,6 +18,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         test_NoteUi();
         
+        
 
 
     };
@@ -27,9 +28,17 @@ public class App {
 
     private static void test_NoteUi() throws Exception{
         File file1 = new File("sound/hello.wav");
-        Phoneme phoneme = new Phoneme(file1,400,25,35,700,100,600);
+        Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,30000);
         NoteUi ni = new NoteUi(phoneme);
         ni.createBox();
+
+    }
+
+    private static void test_AudioProcessor() throws Exception{
+        File file1 = new File("sound/hello.wav");
+        Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,40000);
+        AudioProcessor ap = new AudioProcessor();
+        ap.playFrameRange(phoneme, phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
 
     }
 

@@ -11,56 +11,44 @@ public class NoteUi{
     int xAxis = 800;
     Phoneme phoneme;
 
+
+    // THIS IS BLOOD SWEAT AND TEARS RIGHT HERE I HOPE I DONT GET A J*B IN UI
+
     class GraphPlotGraph extends JPanel {
 
-        byte[] bytes; //storing all the data from the byteAudioOutputStream;
-        int frameLength;
-        int frameSize = 2; // mono audio
+        byte[] bs;
+        long frameLength;
+        long frameSize; // mono audio
         int ypad = 200;
         int arrayLength;
 
-        public GraphPlotGraph(AudioInputStream ais, long frameLength) throws Exception{
-            this.bytes = aisToByte(ais);
-            this.frameLength = (int) frameLength;
+        public GraphPlotGraph(Phoneme phoneme) throws Exception{
+            
+            
+            this.frameLength = phoneme.getAis().getFrameLength();
+            this.frameSize = phoneme.getAis().getFormat().getFrameSize();
+            this.bs = phoneme.getByteStream();
             this.arrayLength = byteToShort().size();
+
         }
 
-        private byte[] aisToByte(AudioInputStream ais) throws Exception{
-            int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
-            int byteRead;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        public int getArrayLength(){
+            return this.arrayLength;
+        }
 
-            //while bytes are not empty
-            while ((byteRead = ais.read(buffer)) != -1){
-                baos.write(buffer, 0, byteRead);
-            }
-
-            byte[] audioBytes = baos.toByteArray();
-
-            return audioBytes; 
-        } 
 
         //a way to convert a signed 16bit pcm into a number;
         private ArrayList<Short> byteToShort(){
 
             ArrayList<Short> shortArray = new ArrayList<>();
             
-            for (int x = 0; x < (this.frameLength / this.frameSize); x++){
-                int byteIndex = x * this.frameSize;
-                short sample = (short) ((this.bytes[byteIndex+1] << 8) | (this.bytes[byteIndex] & 0xff));
+            for (int x = 0; x < (frameLength / frameSize); x++){
+                int byteIndex = (int) (x * this.frameSize);
+                short sample = (short) ((short) (bs[byteIndex+1] << 8) | (bs[byteIndex] & 0xff));
                 shortArray.add(sample);
             }
 
             return shortArray;
-        }
-
-        public void setArrayLength(int arrayLength){
-            this.arrayLength = arrayLength;
-        }
-
-        public int getArrayLength(){
-            return this.arrayLength;
         }
 
 
@@ -428,7 +416,10 @@ public class NoteUi{
         }
     }
 
-
+    /**
+     * GraphTop contains all the manpluation of the WAV
+     * 
+     */
     class GraphTop extends JPanel {
 
         public GraphTop() throws Exception {
@@ -437,12 +428,8 @@ public class NoteUi{
             JLayeredPane layeredPane = new JLayeredPane();
             layeredPane.setPreferredSize(new Dimension(xAxis, (yAxis/2)));
 
-            GraphPlotGraph p = new GraphPlotGraph(phoneme.getAis(), phoneme.getAis().getFrameLength());
-
-            int arrayLength = p.getArrayLength();
-            double xScale = (double) xAxis / arrayLength;
-
-            System.out.println(arrayLength);
+            GraphPlotGraph p = new GraphPlotGraph(phoneme);
+            double xScale = (double) xAxis / p.getArrayLength();
 
             p.setBounds(0, 0, xAxis, (yAxis/2));
 
@@ -452,8 +439,13 @@ public class NoteUi{
             GraphDrawLine dl4 = new GraphDrawLine(phoneme.getPreuttrance(),xScale);
             GraphDrawBox dl5 = new GraphDrawBox(phoneme.getAudioLoopStart(),phoneme.getAudioLoopEnd(),xScale);
 
-            JPanel topPanel = new JPanel(); 
-            topPanel.setLayout(new GridLayout(1, 6));
+            JPanel topPanel = new JPanel();
+            JPanel topTopPanel = new JPanel();
+            JPanel bottomTopPanel = new JPanel();
+            topPanel.setLayout(new GridLayout(1, 2));
+            bottomTopPanel.setLayout(new GridLayout(1, 6));
+            topTopPanel.setLayout(new GridLayout(1, 6));
+
             GraphLines gl1 = new GraphLines("offset", phoneme, dl1);
             GraphLines gl2 = new GraphLines("overlap", phoneme,dl2);
             GraphLines gl3 = new GraphLines("cutoff", phoneme,dl3);
@@ -461,12 +453,20 @@ public class NoteUi{
             GraphLines gl5 = new GraphLines("audioLoopStart", phoneme,dl5);
             GraphLines gl6 = new GraphLines("audioLoopEnd", phoneme,dl5);
 
-            topPanel.add(gl1);
-            topPanel.add(gl2);
-            topPanel.add(gl3);
-            topPanel.add(gl4);
-            topPanel.add(gl5);
-            topPanel.add(gl6);
+            bottomTopPanel.add(gl1);
+            bottomTopPanel.add(gl2);
+            bottomTopPanel.add(gl3);
+            bottomTopPanel.add(gl4);
+            bottomTopPanel.add(gl5);
+            bottomTopPanel.add(gl6);
+
+            PlaybackPanel pp1 = new PlaybackPanel(phoneme.getAis(), phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
+            
+            topTopPanel.add(pp1, new GridBagLayout());
+
+            topPanel.add(topTopPanel);
+            topPanel.add(bottomTopPanel);
+
 
             layeredPane.add(p, Integer.valueOf(0));
             layeredPane.add(dl1, Integer.valueOf(1));
@@ -478,9 +478,54 @@ public class NoteUi{
 
             add(topPanel);
             add(bottomPanel);
+            
 
         }
-    }   
+    }
+
+    class PlaybackPanel extends JPanel{
+
+        AudioProcessor aProcessor = new AudioProcessor();
+
+
+        //Creates a button when uh to playback audioLoop
+        //als, ale = audioloop(start/end)
+        public PlaybackPanel(AudioInputStream ais, int als, int ale) throws Exception{
+            
+            JButton button = new JButton("playback");
+            button.addActionListener(l -> {
+            new Thread(() -> {
+                try {
+                    int numFrames = phoneme.getAudioLoopEnd() - phoneme.getAudioLoopStart();
+                    aProcessor.playFrameRange(phoneme, phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
+                    aProcessor.playback(phoneme, numFrames);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        });
+
+            add(button);
+
+        }
+    }
+
+    class GraphBottom extends JPanel {
+
+        public GraphBottom(){
+
+        try {
+            PlaybackPanel pp1 = new PlaybackPanel(phoneme.getAis(), phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
+            add(pp1);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        }
+
+    }
+
+
 
     public NoteUi(Phoneme phoneme){
         this.phoneme = phoneme;
@@ -492,6 +537,7 @@ public class NoteUi{
         JFrame frame = new JFrame();
         GraphTop gl = new GraphTop();
         frame.setPreferredSize(new Dimension(xAxis+200,yAxis-200));
+
         frame.add(gl);
 
         frame.pack();

@@ -1,7 +1,17 @@
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
+
 
 
 
@@ -23,21 +33,54 @@ public class AudioProcessor{
      * @author ShinoJuly11
      */
 
-    public AudioInputStream playFrameRange(AudioInputStream originalAis, long startFrame, Long endFrame) throws Exception{
+    public void playFrameRange(Phoneme phoneme, int startFrame, int endFrame) throws Exception{
         
-        AudioFormat format = originalAis.getFormat();
-        int frameSize = format.getFrameSize();
-        long numFrames = endFrame - startFrame;
+        int frameSize = phoneme.getAis().getFormat().getFrameSize(); // e.g., 2 bytes per frame (for 16-bit mono)
+        int numFrames = endFrame - startFrame;
+        int numBytes = numFrames * frameSize;
 
-        // Skip to the starting frame (in bytes)
-        long bytesToSkip = startFrame * frameSize;
-        originalAis.skip(bytesToSkip);
+        byte[] byteStream = phoneme.getByteStream();
+        byte[] newByteStream = new byte[numBytes];
 
-        // Create a new AudioInputStream limited to the selected range
-        AudioInputStream selectedAis = new AudioInputStream(originalAis, format, numFrames);
+        // Copy the correct slice of the byte array
+        System.arraycopy(
+            byteStream,
+            startFrame * frameSize, // source start in bytes
+            newByteStream,
+            0,                      // destination start at 0
+            numBytes               // total bytes to copy
+        );
 
-        return selectedAis;
+
     }
+
+    private AudioInputStream baisToAis(Phoneme phoneme, byte[] byteStream, int numFrames) throws IOException{
+        ByteArrayInputStream bais = new ByteArrayInputStream(byteStream);
+        AudioInputStream ais = new AudioInputStream(bais, phoneme.getAis().getFormat(), numFrames);
+        return ais;
+    }
+
+
+
+    public void playback(Phoneme phoneme, int numFrames) throws Exception{
+        AudioInputStream ais = baisToAis(phoneme, phoneme.getByteStream(), numFrames);
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, ais.getFormat());
+        SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
+
+        line.open(ais.getFormat());
+        line.start();
+
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+
+            while ((bytesRead = ais.read(buffer, 0, buffer.length)) != -1) {
+                line.write(buffer, 0, bytesRead);
+            }
+
+        line.drain();
+        line.close();
+    }
+        
 
     /**
      * Changes the sample rate of the provided AudioInputStream to the specified target rate.

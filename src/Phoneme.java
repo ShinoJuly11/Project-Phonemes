@@ -1,3 +1,4 @@
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;
@@ -8,6 +9,7 @@ import javax.sound.sampled.AudioSystem;
 public class Phoneme{
 
     private AudioInputStream ais;
+    private byte[] byteStream;
     private int offset;
     private int overlap;
     private int audioLoopStart, audioLoopEnd;
@@ -22,10 +24,36 @@ public class Phoneme{
         this.audioLoopEnd = audioLoopEnd;
         this.cutoff = cutoff;
         this.preuttrance = preuttrance;
-        
+        this.byteStream = AISToByte(ais);
     }
 
+    // methods
+
+    private byte[] AISToByte(AudioInputStream ais) throws Exception{
+            int bufferSize = 4096;
+            byte[] buffer = new byte[bufferSize];
+            int byteRead;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            //while bytes are not empty
+            while ((byteRead = ais.read(buffer)) != -1){
+                baos.write(buffer, 0, byteRead);
+            }
+
+            byte[] audioBytes = baos.toByteArray();
+
+            return audioBytes; 
+    }  
+
     // get / set
+
+    public byte[] getByteStream(){
+        return this.byteStream;
+    }
+
+    public void setByteStream(byte[] bs){
+        this.byteStream = bs;
+    }
     public AudioInputStream getAis(){
         return this.ais;
     }

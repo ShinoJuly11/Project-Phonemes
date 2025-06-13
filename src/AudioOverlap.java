@@ -20,7 +20,7 @@ public class AudioOverlap{
      * @author ShinoJuly11
      */
 
-    public AudioInputStream overlapAudio(AudioInputStream[] aisArray) throws Exception{
+    public byte[] overlapAudio(AudioInputStream[] aisArray) throws Exception{
 
          ArrayList<byte[]> audioBytesList = new ArrayList<>();
 
@@ -44,11 +44,8 @@ public class AudioOverlap{
 
         long length = returnByte.length / aisArray[0].getFormat().getFrameSize();
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(returnByte);
-        AudioInputStream returnAIS = new AudioInputStream(bais, aisArray[0].getFormat(), length);
-        System.out.println(length);
 
-        return returnAIS;
+        return returnByte;
         
     }
 
