@@ -23,7 +23,6 @@ public class NoteUi{
             this.bytes = aisToByte(ais);
             this.frameLength = (int) frameLength;
             this.arrayLength = byteToShort().size();
-
         }
 
         private byte[] aisToByte(AudioInputStream ais) throws Exception{
@@ -171,8 +170,6 @@ public class NoteUi{
                 add(buttonPanel);
             
             }
-
-
 
             public void buttonFunc(JButton button, JTextField tf1, String property){
 
@@ -355,13 +352,6 @@ public class NoteUi{
                         throw new IllegalArgumentException("Unknown property: " + property);
                 }
             }
-
-            // public void drawLine(int value, JPanel panel){
-
-            //     GraphDrawLine dl = new GraphDrawLine(value);
-            //     dl.add(panel);
-
-            // }
         }
     
     // Java Moment
@@ -434,14 +424,8 @@ public class NoteUi{
                 int boxEnd = Math.max(this.x1, this.x2);
                 int boxWidth = boxEnd - boxStart;
 
-                
-
-                //g.drawRect((int)(boxStart*this.xScale), 0, (int)(boxWidth*this.xScale), 900);
                 g.fillRect((int)(boxStart*this.xScale), 0, (int)(boxWidth*this.xScale), 900);
-
         }
-
-
     }
 
 
@@ -470,7 +454,6 @@ public class NoteUi{
 
             JPanel topPanel = new JPanel(); 
             topPanel.setLayout(new GridLayout(1, 6));
-            //topPanel.setBounds(800,400);
             GraphLines gl1 = new GraphLines("offset", phoneme, dl1);
             GraphLines gl2 = new GraphLines("overlap", phoneme,dl2);
             GraphLines gl3 = new GraphLines("cutoff", phoneme,dl3);
@@ -507,11 +490,9 @@ public class NoteUi{
     public void createBox() throws Exception{
 
         JFrame frame = new JFrame();
-        GraphTop gl = new GraphTop(); // Top control panel
-        //GraphBottom gb = new GraphBottom(); // Bottom graph panel
+        GraphTop gl = new GraphTop();
         frame.setPreferredSize(new Dimension(xAxis+200,yAxis-200));
         frame.add(gl);
-        //frame.add(gb, BorderLayout.CENTER);
 
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
