@@ -1,5 +1,3 @@
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioInputStream;
 
     /**
@@ -28,14 +26,15 @@ public class AudioVolume{
      * @return AudioInputStream
      * 
      * @since v0.5.4 - 09/06/25
-     * @version 1
+     * @version 2 - 13/06/25
      * @author ShinoJuly11
      * 
      */
 
-    public AudioInputStream volumeAudio(AudioInputStream ais, float volumeGradient) throws Exception {
+    public void volumeAudio(Phoneme phoneme, float volumeGradient) throws Exception {
 
-        byte[] audioBytes = AISToByte(ais);
+        byte[] audioBytes = phoneme.getByteStream();
+        AudioInputStream ais = phoneme.getAis();
         int frameSize = ais.getFormat().getFrameSize();
 
         for (int x = 0; x < (ais.getFrameLength() / frameSize); x++){
@@ -49,10 +48,7 @@ public class AudioVolume{
 
         }
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
-        AudioInputStream returnAIS = new AudioInputStream(bais, ais.getFormat(), ais.getFrameLength());
-
-        return returnAIS;
+        phoneme.setByteStream(audioBytes);
 
     }
 
@@ -66,17 +62,19 @@ public class AudioVolume{
      * @return AudioInputStream
      * 
      * @since v0.5.4 - 09/06/25
-     * @version 1
+     * @version 2 13/06/25
      * @author ShinoJuly11
      * 
      */
 
-    public AudioInputStream fadeOutAudio(AudioInputStream ais, int fadeFrames) throws Exception{
+    public void fadeOutAudio(Phoneme phoneme, int fadeFrames) throws Exception{
 
-        byte[] audioBytes = AISToByte(ais);
+        byte[] audioBytes = phoneme.getByteStream();
+        AudioInputStream ais = phoneme.getAis();
         int frameSize = ais.getFormat().getFrameSize();
         int totalFrames = (int) ais.getFrameLength();
         int startFrame = totalFrames - fadeFrames;
+
         if (startFrame < 0) startFrame = 0;
 
         for (int x = startFrame; x < totalFrames; x++){
@@ -93,10 +91,7 @@ public class AudioVolume{
 
         }
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
-        AudioInputStream returnAIS = new AudioInputStream(bais, ais.getFormat(), ais.getFrameLength());
-
-        return returnAIS;
+        phoneme.setByteStream(audioBytes);
 
     }
 
@@ -110,15 +105,16 @@ public class AudioVolume{
      * @return AudioInputStream
      * 
      * @since v0.5.4 - 09/06/25
-     * @version 1
+     * @version 2 13/06/25
      * @author ShinoJuly11
      * 
      */
 
     
-    public AudioInputStream fadeInAudio(AudioInputStream ais, int fadeFrames) throws Exception{
+    public void fadeInAudio(Phoneme phoneme, int fadeFrames) throws Exception{
 
-        byte[] audioBytes = AISToByte(ais);
+        byte[] audioBytes = phoneme.getByteStream();
+        AudioInputStream ais = phoneme.getAis();
         int frameSize = ais.getFormat().getFrameSize();
         int totalFrames = (int) ais.getFrameLength();
 
@@ -137,41 +133,9 @@ public class AudioVolume{
 
         }
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
-        AudioInputStream returnAIS = new AudioInputStream(bais, ais.getFormat(), ais.getFrameLength());
+        phoneme.setByteStream(audioBytes);
 
-        return returnAIS;
 
     }
-
-        /**
-     * 
-     * Decreases the gain from the starting frame (fadeFrames) to the end of the array frames.
-     * 
-     * @param ais - AudioInputStream
-     * @throws Exception usually AudioInputStream related errors 
-     * @return byte[] - An array of the audio file but in bytes
-     * 
-     * @since v0.5.4 - 09/06/25
-     * @version 1
-     * @author ShinoJuly11
-     * 
-     */
-
-    private byte[] AISToByte(AudioInputStream ais) throws Exception{
-            int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
-            int byteRead;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            //while bytes are not empty
-            while ((byteRead = ais.read(buffer)) != -1){
-                baos.write(buffer, 0, byteRead);
-            }
-
-            byte[] audioBytes = baos.toByteArray();
-
-            return audioBytes; 
-    }        
 
 }

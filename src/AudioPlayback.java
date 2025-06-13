@@ -1,11 +1,6 @@
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -16,7 +11,7 @@ import javax.sound.sampled.SourceDataLine;
 
 
 
-public class AudioProcessor{
+public class AudioPlayback{
 
     /**
      * Extracts and returns a subrange of frames from the provided AudioInputStream,
@@ -29,7 +24,7 @@ public class AudioProcessor{
      * @throws Exception if an error occurs during processing the AudioInputStream
      * 
      * @since v0.5.4 - 09/06/25
-     * @version 1
+     * @version 2 13/06/25
      * @author ShinoJuly11
      */
 

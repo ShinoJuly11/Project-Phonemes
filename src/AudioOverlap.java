@@ -42,9 +42,6 @@ public class AudioOverlap{
 
         }
 
-        long length = returnByte.length / aisArray[0].getFormat().getFrameSize();
-
-
         return returnByte;
         
     }

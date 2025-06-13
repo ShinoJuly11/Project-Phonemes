@@ -22,9 +22,6 @@ public class PhonemeUtils {
         AudioOverlap ao = new AudioOverlap();
         AudioVolume av = new AudioVolume();
 
-        AudioInputStream ais3 = av.fadeOutAudio(ais1, p1.getOverlap());
-        AudioInputStream ais4 = av.fadeInAudio(ais2, p2.getPreuttrance());
-
         AudioInputStream returnAIS = ao.overlapTwoAudio(ais3,ais4,p1.getOverlap());
         return returnAIS;
     }

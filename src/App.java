@@ -1,4 +1,5 @@
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -16,7 +17,7 @@ import be.tarsos.dsp.io.jvm.AudioPlayer;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        test_NoteUi();
+        test_AudioProcessor();
         
         
 
@@ -37,8 +38,21 @@ public class App {
     private static void test_AudioProcessor() throws Exception{
         File file1 = new File("sound/hello.wav");
         Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,40000);
-        AudioProcessor ap = new AudioProcessor();
-        ap.playFrameRange(phoneme, phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
+        AudioPitch ap = new AudioPitch(phoneme);
+        System.out.println(phoneme.getByteStream().length);
+        ap.AudioPitchFactor(1f);
+        AudioPlayback apl = new AudioPlayback();
+        int frameSize = phoneme.getAis().getFormat().getFrameSize();
+        int numFrames = phoneme.getByteStream().length / frameSize;
+        apl.playback(phoneme, numFrames);
+
+        File outfile = new File("sound/apb2.wav");
+        ByteArrayInputStream bais = new ByteArrayInputStream(phoneme.getByteStream());
+        AudioInputStream ais = new AudioInputStream(bais, phoneme.getAis().getFormat(), phoneme.getAis().getFrameLength());
+        AudioSystem.write(ais, AudioFileFormat.Type.WAVE, outfile);
+        System.out.println(phoneme.getByteStream().length);
+
+
 
     }
 
@@ -166,6 +180,7 @@ public class App {
         
         dispatcher.addAudioProcessor(new PitchShifter(1.5f,ais.getFormat().getSampleRate(),bufferSize,overlap));
         dispatcher.addAudioProcessor(new AudioPlayer(dispatcher.getFormat()));
+
 
         new Thread(dispatcher).start();
     }

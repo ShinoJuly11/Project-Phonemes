@@ -2,7 +2,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.swing.*; // UI implementation
 
 import java.awt.*;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class NoteUi{
@@ -485,7 +484,7 @@ public class NoteUi{
 
     class PlaybackPanel extends JPanel{
 
-        AudioProcessor aProcessor = new AudioProcessor();
+        AudioPlayback aProcessor = new AudioPlayback();
 
 
         //Creates a button when uh to playback audioLoop
