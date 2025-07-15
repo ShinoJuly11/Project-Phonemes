@@ -35,7 +35,7 @@ public class App {
     // test for text to graphemes
 
     private static void test_NoteUi() throws Exception{
-        File file1 = new File("sound/hello.wav");
+        File file1 = new File("sound/fe.wav");
         Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,30000);
         NoteUi ni = new NoteUi(phoneme);
         ni.createBox();

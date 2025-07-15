@@ -87,7 +87,6 @@ public class NoteUi{
 
             public void initUi(String property){
                 setLayout(new GridLayout(4,1));
-                setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
                 JPanel buttonPanel = new JPanel();
                 buttonPanel.setLayout(new GridLayout(1,2));
@@ -123,14 +122,11 @@ public class NoteUi{
                 add(buttonPanel);
             }
 
-
-
             public GraphLines(String property, Phoneme phoneme, GraphDrawLine gd){
 
                 this.gd = gd;
 
                 setLayout(new GridLayout(4,1));
-                setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
                 JPanel buttonPanel = new JPanel();
                 buttonPanel.setLayout(new GridLayout(1,2));
@@ -381,6 +377,88 @@ public class NoteUi{
             }
     }
 
+    class pitchControlPanel extends JPanel{
+
+        public pitchControlPanel(Phoneme phoneme) {
+
+                setLayout(new GridLayout(4,1));
+
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new GridLayout(1,2));
+                JButton button1 = new JButton("<");
+                JButton button2 = new JButton(">");
+
+                JLabel label1 = new JLabel("Pitch", SwingConstants.CENTER);
+                JTextField tf1 = new JTextField(Float.toString(phoneme.getPitch()), SwingConstants.CENTER);
+                JButton button3 = new JButton("Enter Value");
+
+
+                buttonFunc(button3,tf1);
+                buttonMinus(button1,tf1);
+                buttonPlus(button2,tf1);
+
+                // sub panel
+                buttonPanel.add(button1);
+                buttonPanel.add(button2);
+
+                //main panel
+                add(label1);
+                add(tf1);
+                add(button3);
+                add(buttonPanel);
+            
+            }
+
+            public void buttonFunc(JButton button, JTextField tf1){
+
+                button.addActionListener(e -> {
+                    try {
+                        float value = Float.parseFloat(tf1.getText());
+                        phoneme.setPitch(value);
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number.");
+                        tf1.setText("0"); 
+                    }
+                
+                });
+            }
+
+            public void buttonMinus(JButton button, JTextField tf1){
+                button.addActionListener(e -> {
+                    try{
+                        float value = Float.parseFloat(tf1.getText());
+                        value -= 0.1f;
+                        tf1.setText(Float.toString(value));
+                        phoneme.setPitch(value);
+                        
+
+                    } catch (NumberFormatException ex){ // catches the empty textfield
+                        tf1.setText("1");
+                    }
+                });
+
+            }
+
+
+            public void buttonPlus(JButton button, JTextField tf1){
+                button.addActionListener(e -> {
+                    try{
+                        float value = Float.parseFloat(tf1.getText());
+                        value += 0.1f;
+                        tf1.setText(Float.toString(value));
+                        phoneme.setPitch(value);
+                        
+
+                    } catch (NumberFormatException ex){ // catches the empty textfield
+                        tf1.setText("1");
+                    }
+                });
+
+            }
+            
+        }
+
     class GraphDrawBox extends GraphDraw{
 
         public GraphDrawBox(int x1, int x2, double xScale){
@@ -423,6 +501,9 @@ public class NoteUi{
 
         public GraphTop() throws Exception {
 
+            JPanel topPanel = new JPanel();
+            topPanel.setLayout(new GridLayout(1, 6));
+        
             JPanel bottomPanel = new JPanel(new BorderLayout()); // <-- Also needs a layout manager
             JLayeredPane layeredPane = new JLayeredPane();
             layeredPane.setPreferredSize(new Dimension(xAxis, (yAxis/2)));
@@ -438,34 +519,36 @@ public class NoteUi{
             GraphDrawLine dl4 = new GraphDrawLine(phoneme.getPreuttrance(),xScale);
             GraphDrawBox dl5 = new GraphDrawBox(phoneme.getAudioLoopStart(),phoneme.getAudioLoopEnd(),xScale);
 
-            JPanel topPanel = new JPanel();
-            JPanel topTopPanel = new JPanel();
-            JPanel bottomTopPanel = new JPanel();
-            topPanel.setLayout(new GridLayout(1, 2));
-            bottomTopPanel.setLayout(new GridLayout(1, 6));
-            topTopPanel.setLayout(new GridLayout(1, 6));
-
             GraphLines gl1 = new GraphLines("offset", phoneme, dl1);
             GraphLines gl2 = new GraphLines("overlap", phoneme,dl2);
             GraphLines gl3 = new GraphLines("cutoff", phoneme,dl3);
             GraphLines gl4 = new GraphLines("preuttrance", phoneme,dl4);
             GraphLines gl5 = new GraphLines("audioLoopStart", phoneme,dl5);
             GraphLines gl6 = new GraphLines("audioLoopEnd", phoneme,dl5);
+            pitchControlPanel pcp = new pitchControlPanel(phoneme);
 
-            bottomTopPanel.add(gl1);
-            bottomTopPanel.add(gl2);
-            bottomTopPanel.add(gl3);
-            bottomTopPanel.add(gl4);
-            bottomTopPanel.add(gl5);
-            bottomTopPanel.add(gl6);
+            topPanel.add(gl1);
+            topPanel.add(gl2);
+            topPanel.add(gl3);
+            topPanel.add(gl4);
+            topPanel.add(gl5);
+            topPanel.add(gl6);
+            topPanel.add(pcp);
 
-            PlaybackPanel pp1 = new PlaybackPanel(phoneme.getAis(), phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
+            PlaybackPanel pp1 = new PlaybackPanel(phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
+            PlaybackPanel pp2 = new PlaybackPanel(phoneme.getPitch());
+
+            JPanel playbackContainer = new JPanel();
+            //playbackContainer.setLayout(new GridLayout(1,2));
+            playbackContainer.add(pp1);
+            playbackContainer.add(pp2);
+
+            JPanel topPanelContainer = new JPanel();
+            topPanelContainer.setLayout(new GridLayout(2,1));
+
+            topPanelContainer.add(topPanel);
+            topPanelContainer.add(playbackContainer);
             
-            topTopPanel.add(pp1, new GridBagLayout());
-
-            topPanel.add(topTopPanel);
-            topPanel.add(bottomTopPanel);
-
 
             layeredPane.add(p, Integer.valueOf(0));
             layeredPane.add(dl1, Integer.valueOf(1));
@@ -475,11 +558,15 @@ public class NoteUi{
             layeredPane.add(dl5, Integer.valueOf(5)); 
             bottomPanel.add(layeredPane, BorderLayout.CENTER);
 
-            add(topPanel);
+            //REMEMEBER BOTTOM PANEL FOR THE WAVEFORM
+            add(topPanelContainer);
             add(bottomPanel);
+            
             
 
         }
+
+
     }
 
     class PlaybackPanel extends JPanel{
@@ -489,7 +576,7 @@ public class NoteUi{
 
         //Creates a button when uh to playback audioLoop
         //als, ale = audioloop(start/end)
-        public PlaybackPanel(AudioInputStream ais, int als, int ale) throws Exception{
+        public PlaybackPanel(int als, int ale) throws Exception{
             
             JButton button = new JButton("playback");
             button.addActionListener(l -> {
@@ -497,7 +584,33 @@ public class NoteUi{
                 try {
                     int numFrames = phoneme.getAudioLoopEnd() - phoneme.getAudioLoopStart();
                     aProcessor.playFrameRange(phoneme, phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
-                    aProcessor.playback(phoneme, numFrames);
+                    aProcessor.playback(phoneme, phoneme.getByteStream(), numFrames);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        });
+
+            add(button);
+
+        }
+
+        public PlaybackPanel(float pitchFactor) throws Exception{
+
+            //P.S the arguement does fuckall left it like that so i can overload the class
+            
+            JButton button = new JButton("Test Pitch");
+            button.addActionListener(l -> {
+            new Thread(() -> {
+                try {
+                    aProcessor.pitchShift(phoneme, phoneme.getPitch());
+
+                    byte[] pbs = phoneme.getProcessedByteStream();
+
+                    int frameSize = phoneme.getAis().getFormat().getFrameSize();
+                    int numFrames = pbs.length / frameSize;
+                    
+                    aProcessor.playback(phoneme, pbs, numFrames);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -509,22 +622,6 @@ public class NoteUi{
         }
     }
 
-    class GraphBottom extends JPanel {
-
-        public GraphBottom(){
-
-        try {
-            PlaybackPanel pp1 = new PlaybackPanel(phoneme.getAis(), phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
-            add(pp1);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        }
-
-    }
-
-
 
     public NoteUi(Phoneme phoneme){
         this.phoneme = phoneme;
@@ -534,8 +631,9 @@ public class NoteUi{
     public void createBox() throws Exception{
 
         JFrame frame = new JFrame();
+
         GraphTop gl = new GraphTop();
-        frame.setPreferredSize(new Dimension(xAxis+200,yAxis-200));
+        frame.setPreferredSize(new Dimension(xAxis,yAxis));
 
         frame.add(gl);
 

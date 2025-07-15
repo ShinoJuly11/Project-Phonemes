@@ -10,11 +10,13 @@ public class Phoneme{
 
     private AudioInputStream ais;
     private byte[] byteStream;
+    private byte[] processedByteStream;
     private int offset;
     private int overlap;
     private int audioLoopStart, audioLoopEnd;
     private int cutoff;
     private int preuttrance;
+    private float pitch;
 
     public Phoneme(File file, int offset, int overlap, int cutoff, int preuttrance, int audioLoopStart, int audioLoopEnd) throws Exception{
         this.ais = AudioSystem.getAudioInputStream(file);
@@ -46,6 +48,22 @@ public class Phoneme{
     }  
 
     // get / set
+
+    public float getPitch(){
+        return this.pitch;
+    }
+
+    public void setPitch(float pitch){
+        this.pitch = pitch;
+    }
+
+    public byte[] getProcessedByteStream(){
+        return this.processedByteStream;
+    }
+
+    public void setProcessedByteStream (byte[] pbs){
+        this.processedByteStream = pbs;
+    }
 
     public byte[] getByteStream(){
         return this.byteStream;

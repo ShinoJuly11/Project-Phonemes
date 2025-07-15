@@ -1,11 +1,24 @@
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+import be.tarsos.dsp.AudioDispatcher;
+import be.tarsos.dsp.FadeIn;
+import be.tarsos.dsp.FadeOut;
+import be.tarsos.dsp.GainProcessor;
+import be.tarsos.dsp.PitchShifter;
+import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
+import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
+import be.tarsos.dsp.io.jvm.AudioPlayer;
 
 
 
@@ -57,8 +70,8 @@ public class AudioPlayback{
 
 
 
-    public void playback(Phoneme phoneme, int numFrames) throws Exception{
-        AudioInputStream ais = baisToAis(phoneme, phoneme.getByteStream(), numFrames);
+    public void playback(Phoneme phoneme, byte[] byteStream, int numFrames) throws Exception{
+        AudioInputStream ais = baisToAis(phoneme, byteStream, numFrames);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, ais.getFormat());
         SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
 
@@ -111,6 +124,29 @@ public class AudioPlayback{
 
     }
 
+    public void pitchShift(Phoneme phoneme, float pitchFactor) throws UnsupportedAudioFileException{
+
+        int bufferSize = 1024;
+        int overlap = 768;
+        byte[] byteArray = phoneme.getByteStream();
+        AudioFormat format = phoneme.getAis().getFormat();
+
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromByteArray(byteArray, format, bufferSize, overlap);
+        TarsosDSPBufferCollector collector = new TarsosDSPBufferCollector(format.isBigEndian(),overlap);
+        PitchShifter pShifter = new PitchShifter(pitchFactor, format.getSampleRate(), bufferSize, overlap);
+
+        //dispatcher.addAudioProcessor(new PitchShifter(1.2f,format.getSampleRate(),bufferSize,overlap));
+        //dispatcher.addAudioProcessor(new TarsosDSPPitchBend(3, 3, bufferCount, 48000, bufferSize, overlap));
+
+        dispatcher.addAudioProcessor(pShifter);
+        dispatcher.addAudioProcessor(collector);
+        dispatcher.run();
+
+        byte[] processedBytes = collector.getBytes();
+        phoneme.setProcessedByteStream(processedBytes);
+
+    }
+    
     /**
      * Stretches the audio by the given stretch factor.
      * A factor > 1 lengthens the audio, while a factor < 1 shortens it.
