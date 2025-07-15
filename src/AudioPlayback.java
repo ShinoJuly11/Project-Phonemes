@@ -42,7 +42,7 @@ public class AudioPlayback{
             byteStream,
             startFrame * frameSize, // source start in bytes
             newByteStream,
-            0,                      // destination start at 0
+            0,             // destination start at 0
             numBytes               // total bytes to copy
         );
 

@@ -2,26 +2,33 @@
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 import javax.sound.sampled.*; // the only dependancy in this whole thing
 
 import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
-import LEGACYFILES.TimeStretch;
 import be.tarsos.dsp.AudioDispatcher;
+import be.tarsos.dsp.FadeIn;
+import be.tarsos.dsp.FadeOut;
+import be.tarsos.dsp.GainProcessor;
 import be.tarsos.dsp.PitchShifter;
+import be.tarsos.dsp.SilenceDetector;
+import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
+import be.tarsos.dsp.io.TarsosDSPAudioFormat;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.io.jvm.AudioPlayer;
-
+import be.tarsos.dsp.util.fft.WindowFunction;
+import be.tarsos.dsp.writer.WriterProcessor;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        test_AudioProcessor();
-        
-        
+        //test_AudioProcessor();
+        //test_tarsosdsp();
+        //test_solaAlgorithm_stretchAudio();
 
-
+        test_NoteUi();
     };
 
 
@@ -35,26 +42,24 @@ public class App {
 
     }
 
-    private static void test_AudioProcessor() throws Exception{
-        File file1 = new File("sound/hello.wav");
-        Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,40000);
-        AudioPitch ap = new AudioPitch(phoneme);
-        System.out.println(phoneme.getByteStream().length);
-        ap.AudioPitchFactor(1f);
-        AudioPlayback apl = new AudioPlayback();
-        int frameSize = phoneme.getAis().getFormat().getFrameSize();
-        int numFrames = phoneme.getByteStream().length / frameSize;
-        apl.playback(phoneme, numFrames);
+    // private static void test_AudioProcessor() throws Exception{
+    //     File file1 = new File("sound/hello.wav");
+    //     Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,40000);
+    //     AudioPitch ap = new AudioPitch(phoneme);
+    //     System.out.println(phoneme.getByteStream().length);
+    //     ap.AudioPitchFactor(1f);
+    //     AudioPlayback apl = new AudioPlayback();
+    //     int frameSize = phoneme.getAis().getFormat().getFrameSize();
+    //     int numFrames = phoneme.getByteStream().length / frameSize;
+    //     apl.playback(phoneme, numFrames);
 
-        File outfile = new File("sound/apb2.wav");
-        ByteArrayInputStream bais = new ByteArrayInputStream(phoneme.getByteStream());
-        AudioInputStream ais = new AudioInputStream(bais, phoneme.getAis().getFormat(), phoneme.getAis().getFrameLength());
-        AudioSystem.write(ais, AudioFileFormat.Type.WAVE, outfile);
-        System.out.println(phoneme.getByteStream().length);
+    //     File outfile = new File("sound/apb2.wav");
+    //     ByteArrayInputStream bais = new ByteArrayInputStream(phoneme.getByteStream());
+    //     AudioInputStream ais = new AudioInputStream(bais, phoneme.getAis().getFormat(), phoneme.getAis().getFrameLength());
+    //     AudioSystem.write(ais, AudioFileFormat.Type.WAVE, outfile);
+    //     System.out.println(phoneme.getByteStream().length);
 
-
-
-    }
+    // }
 
     private static void test_SentenceTokenizer(){
         Scanner scanner = new Scanner(System.in);
@@ -74,29 +79,6 @@ public class App {
         ClipClass clip1 = new ClipClass(sound1);
 
         clip1.playback();
-    }
-
-    private static void test_TimeStretcher() throws Exception{
-
-        File file1 = new File("sound/hello.wav");
-        File file2 = new File("sound/fe.wav");
-
-        Clip clip1 = AudioSystem.getClip();
-
-        AudioInputStream ais1  = AudioSystem.getAudioInputStream(file1);
-        AudioInputStream ais2  = AudioSystem.getAudioInputStream(file2);
-        
-
-        TimeStretch ts = new TimeStretch(ais1, ais2);
-        ClipClass cc = new ClipClass(file1);
-
-        //AudioInputStream ais3 = AudioSystem.getAudioInputStream(ts.mergeTwoClips(ais1,ais2));
-        AudioInputStream ais3 = AudioSystem.getAudioInputStream(ts.stretchAudio(cc.sampleRate(file1 , 48000),1.25f));
-        clip1.open(ais3);
-        
-        clip1.start();
-        Thread.sleep(50);
-
     }
 
     private static void test_solaAlgorithm() throws Exception{
@@ -128,6 +110,20 @@ public class App {
         SolaAlgorithm sola = new SolaAlgorithm();
         //sola.playback(sola.wavToChunks(sound1 , 0.1f));
         AudioInputStream ais3 = sola.volumeAudio(ais1, 3f);
+
+        File outfile = new File("sound/volume_3.wav");
+        AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outfile);
+    }
+
+    private static void test_solaAlgorithm_stretchAudio() throws Exception{
+
+        File file1 = new File("sound/hello.wav");
+
+        AudioInputStream ais1 = AudioSystem.getAudioInputStream(file1);
+
+        AudioPlayback ap = new AudioPlayback();
+        //sola.playback(sola.wavToChunks(sound1 , 0.1f));
+        AudioInputStream ais3 = ap.stretchAudio(ais1, 3);
 
         File outfile = new File("sound/volume_3.wav");
         AudioSystem.write(ais3, AudioFileFormat.Type.WAVE, outfile);
@@ -170,20 +166,44 @@ public class App {
 
     private static void test_tarsosdsp() throws Exception{
 
-        String filePath = "sound/temp.wav";
-        AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filePath));
-        int sampleRate = (int) ais.getFormat().getSampleRate();
-        int bufferSize = 512;
-        int overlap = 500;
+        AudioInputStream ais = AudioSystem.getAudioInputStream(new File("sound/hello.wav"));
+        AudioFormat format = ais.getFormat();
+        int bufferSize = 1024;
+        int overlap = 768;
 
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromFile(new File("sound/temp2.wav"),bufferSize,overlap);
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe("sound/hello.wav",48000,bufferSize,overlap);
+        TarsosDSPBufferCollector collector = new TarsosDSPBufferCollector(format.isBigEndian(),overlap);
+        WaveformSimilarityBasedOverlapAdd wsola = new WaveformSimilarityBasedOverlapAdd(WaveformSimilarityBasedOverlapAdd.Parameters.speechDefaults
+        (1.0f, 48000));
         
-        dispatcher.addAudioProcessor(new PitchShifter(1.5f,ais.getFormat().getSampleRate(),bufferSize,overlap));
+        int bufferCount = (int) ais.getFrameLength() % bufferSize;
+
+        //dispatcher.addAudioProcessor(new PitchShifter(1.2f,format.getSampleRate(),bufferSize,overlap));
+        
+        //dispatcher.addAudioProcessor(new TarsosDSPPitchBend(3, 3, bufferCount, 48000, bufferSize, overlap));
+        dispatcher.addAudioProcessor(new FadeIn(1));
+        dispatcher.addAudioProcessor(new FadeOut(1));
+        dispatcher.addAudioProcessor(new GainProcessor(1));
         dispatcher.addAudioProcessor(new AudioPlayer(dispatcher.getFormat()));
+        dispatcher.addAudioProcessor(wsola);
+        dispatcher.addAudioProcessor(collector);
+        dispatcher.run();
+
+        byte[] processedBytes = collector.getBytes();
+        ByteArrayInputStream bais = new ByteArrayInputStream(processedBytes);
+        int frameSize = format.getFrameSize();
+        long numFrames = processedBytes.length / frameSize;
+        AudioInputStream processedAIS = new AudioInputStream(bais, format, numFrames);
+
+        File outfile = new File("sound/processed.wav");
+        AudioSystem.write(processedAIS, AudioFileFormat.Type.WAVE, outfile);
 
 
-        new Thread(dispatcher).start();
     }
+
+    public int frameBufferRatio(long frameLength, int bufferSize){
+        return (int) frameLength % bufferSize;
+        }
         
 
 }

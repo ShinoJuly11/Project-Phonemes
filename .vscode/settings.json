@@ -3,6 +3,6 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "/Users/laforgapmac/Downloads/TarsosDSP-2.4.1.jar"
+        "/Users/laforgapmac/Downloads/TarsosDSP-latest.jar"
     ]
 }
