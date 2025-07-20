@@ -35,7 +35,7 @@ public class App {
     // test for text to graphemes
 
     private static void test_NoteUi() throws Exception{
-        File file1 = new File("sound/fe.wav");
+        File file1 = new File("sound/hello.wav");
         Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,30000);
         NoteUi ni = new NoteUi(phoneme);
         ni.createBox();
@@ -169,34 +169,17 @@ public class App {
         AudioInputStream ais = AudioSystem.getAudioInputStream(new File("sound/hello.wav"));
         AudioFormat format = ais.getFormat();
         int bufferSize = 1024;
-        int overlap = 768;
+        int overlap = 256;
 
         AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe("sound/hello.wav",48000,bufferSize,overlap);
         TarsosDSPBufferCollector collector = new TarsosDSPBufferCollector(format.isBigEndian(),overlap);
-        WaveformSimilarityBasedOverlapAdd wsola = new WaveformSimilarityBasedOverlapAdd(WaveformSimilarityBasedOverlapAdd.Parameters.speechDefaults
-        (1.0f, 48000));
-        
-        int bufferCount = (int) ais.getFrameLength() % bufferSize;
 
-        //dispatcher.addAudioProcessor(new PitchShifter(1.2f,format.getSampleRate(),bufferSize,overlap));
         
-        //dispatcher.addAudioProcessor(new TarsosDSPPitchBend(3, 3, bufferCount, 48000, bufferSize, overlap));
-        dispatcher.addAudioProcessor(new FadeIn(1));
-        dispatcher.addAudioProcessor(new FadeOut(1));
-        dispatcher.addAudioProcessor(new GainProcessor(1));
+
+        dispatcher.addAudioProcessor(new WaveformSimilarityBasedOverlapAdd
+        (WaveformSimilarityBasedOverlapAdd.Parameters.speechDefaults(0.5, 44100)));
         dispatcher.addAudioProcessor(new AudioPlayer(dispatcher.getFormat()));
-        dispatcher.addAudioProcessor(wsola);
-        dispatcher.addAudioProcessor(collector);
         dispatcher.run();
-
-        byte[] processedBytes = collector.getBytes();
-        ByteArrayInputStream bais = new ByteArrayInputStream(processedBytes);
-        int frameSize = format.getFrameSize();
-        long numFrames = processedBytes.length / frameSize;
-        AudioInputStream processedAIS = new AudioInputStream(bais, format, numFrames);
-
-        File outfile = new File("sound/processed.wav");
-        AudioSystem.write(processedAIS, AudioFileFormat.Type.WAVE, outfile);
 
 
     }

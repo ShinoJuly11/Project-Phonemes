@@ -1,6 +1,7 @@
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
@@ -136,6 +137,10 @@ public class Phoneme{
         System.out.println(audioLoopStart);
         System.out.println(audioLoopEnd);
         
+    }
+
+    public AudioFormat getFormat(){
+        return this.getAis().getFormat();
     }
 
 }

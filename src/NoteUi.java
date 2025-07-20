@@ -537,11 +537,13 @@ public class NoteUi{
 
             PlaybackPanel pp1 = new PlaybackPanel(phoneme.getAudioLoopStart(), phoneme.getAudioLoopEnd());
             PlaybackPanel pp2 = new PlaybackPanel(phoneme.getPitch());
+            PlaybackPanel pp3 = new PlaybackPanel(true);
 
             JPanel playbackContainer = new JPanel();
             //playbackContainer.setLayout(new GridLayout(1,2));
             playbackContainer.add(pp1);
             playbackContainer.add(pp2);
+            playbackContainer.add(pp3);
 
             JPanel topPanelContainer = new JPanel();
             topPanelContainer.setLayout(new GridLayout(2,1));
@@ -597,7 +599,7 @@ public class NoteUi{
 
         public PlaybackPanel(float pitchFactor) throws Exception{
 
-            //P.S the arguement does fuckall left it like that so i can overload the class
+            //P.S the arguement above does fuckall left it like that so i can overload the playbackpanel class
             
             JButton button = new JButton("Test Pitch");
             button.addActionListener(l -> {
@@ -605,6 +607,33 @@ public class NoteUi{
                 try {
                     aProcessor.pitchShift(phoneme, phoneme.getPitch());
 
+                    byte[] pbs = phoneme.getProcessedByteStream();
+
+                    int frameSize = phoneme.getAis().getFormat().getFrameSize();
+                    int numFrames = pbs.length / frameSize;
+                    
+                    aProcessor.playback(phoneme, pbs, numFrames);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        });
+
+            add(button);
+
+        }
+
+        public PlaybackPanel(Boolean placeholder) throws Exception{
+
+            //P.S the arguement above does fuckall left it like that so i can overload the playbackpanel class
+            
+            JButton button = new JButton("Test audioLoop");
+            button.addActionListener(l -> {
+            new Thread(() -> {
+                try {
+
+                    int desiredLength = 200000;
+                    aProcessor.audioLoop(phoneme, desiredLength);
                     byte[] pbs = phoneme.getProcessedByteStream();
 
                     int frameSize = phoneme.getAis().getFormat().getFrameSize();

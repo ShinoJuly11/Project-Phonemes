@@ -194,4 +194,74 @@ public class AudioPlayback{
 
         return stretchedAIS;
     }
+
+        public void audioLoop(Phoneme phoneme, int desiredLength){
+
+        int frameSize = phoneme.getAis().getFormat().getFrameSize(); // e.g., 2 bytes per frame (for 16-bit mono)
+        byte[] byteStream = phoneme.getByteStream();
+        int audioLoopStart = phoneme.getAudioLoopStart();
+        int audioLoopEnd = phoneme.getAudioLoopEnd();
+
+        byte[] loopedByteStream = getAudioLoopByteStream(byteStream, audioLoopStart, audioLoopEnd, frameSize);
+        int calcResultLength = getNumLoops(byteStream, loopedByteStream, desiredLength, frameSize);
+
+        byte[] resultedLoop = concatLoops(phoneme, byteStream, loopedByteStream, calcResultLength);
+
+        phoneme.setProcessedByteStream(resultedLoop);
+    }
+
+    private byte[] getAudioLoopByteStream(byte[] byteStream, int start, int end, int frameSize){
+
+        byte[] tempByteStream = byteStream.clone();
+        int numFrames = end - start;
+        int numBytes = numFrames * frameSize;
+        byte[] newByteStream = new byte[numBytes];
+
+        // Copy the correct slice of the byte array
+        System.arraycopy(
+            tempByteStream,
+            start * frameSize, // source start in bytes
+            newByteStream,
+            0,             // destination start at 0
+            numBytes               // total bytes to copy
+        );
+
+        return newByteStream;
+
+
+    }
+
+    private int getNumLoops(byte[] original, byte[] looped, int desiredFrameLength, int frameSize){
+
+        int numFrames1 = original.length / frameSize;
+        int numFrames2 = looped.length / frameSize;
+        int tempLength = desiredFrameLength - numFrames1;
+        int calcResultLength = tempLength / numFrames2;
+
+        if (tempLength <= 0) return 0;
+        
+        return calcResultLength;
+
+    }
+
+    private byte[] concatLoops(Phoneme phoneme, byte[] original, byte[] looped, int numLoops){
+    byte[] choppedOriginal = getAudioLoopByteStream(original, 0, phoneme.getAudioLoopStart(), phoneme.getFormat().getFrameSize());
+    byte[] choppedEndOriginal = getAudioLoopByteStream(original, phoneme.getAudioLoopEnd(),original.length / phoneme.getFormat().getFrameSize(), phoneme.getFormat().getFrameSize());
+    byte[] newConcatLoop = new byte[choppedOriginal.length + (looped.length * numLoops) + choppedEndOriginal.length];
+
+    // Copy the original array
+    
+    System.arraycopy(choppedOriginal, 0, newConcatLoop, 0, choppedOriginal.length);
+
+    // Copy the looped array numLoops times
+    for (int i = 0; i < numLoops; i++) {
+        System.arraycopy(looped, 0, newConcatLoop, choppedOriginal.length + i * looped.length, looped.length);
+    }
+
+    System.arraycopy(choppedEndOriginal, 0, newConcatLoop, choppedOriginal.length + numLoops * looped.length, choppedEndOriginal.length);
+
+    return newConcatLoop;
+    }
+        
 }
+
