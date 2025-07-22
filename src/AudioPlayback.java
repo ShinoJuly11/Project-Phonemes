@@ -1,9 +1,7 @@
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -12,16 +10,8 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import be.tarsos.dsp.AudioDispatcher;
-import be.tarsos.dsp.FadeIn;
-import be.tarsos.dsp.FadeOut;
-import be.tarsos.dsp.GainProcessor;
 import be.tarsos.dsp.PitchShifter;
-import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
-import be.tarsos.dsp.io.jvm.AudioPlayer;
-
-
-
 
 
 public class AudioPlayback{

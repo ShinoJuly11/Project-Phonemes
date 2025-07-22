@@ -12,12 +12,96 @@ public class Phoneme{
     private AudioInputStream ais;
     private byte[] byteStream;
     private byte[] processedByteStream;
+    private int id;
+    private String fileName;
+    private String alias;
+    private String comment;
+
+    /**
+     * offset
+     * 
+     * Plays the phoneme note early.
+     * 
+     */
     private int offset;
+
+    /**
+     * Overlap 
+     * 
+     * affects the phoneme note fade in and fade out (crossfade)
+     * 
+     */
+    
     private int overlap;
+
+    /**
+     * 
+     * @deprecated
+     * AudioLoopStart, AudioLoopEnd
+     * 
+     * Used to loop vowels 
+     * 
+     * Instead Constentant and preuttrance is used
+     */
+
     private int audioLoopStart, audioLoopEnd;
+
+    /**
+     * Cutoff
+     * 
+     * End of the phoneme note
+     * 
+     */
     private int cutoff;
+
+    /**
+     * Consonant
+     * 
+     * Start of the consonant sound
+     * 
+     * between consonant and preutturance its unlooped
+     */
+    private int consonant; // add later here
+
+    /**
+     * 
+     * preuttrance
+     * 
+     * end of the consonant sound, beginning of the vowel sound (if any)
+     * if none
+     */
     private int preuttrance;
+
+    /**
+     * 
+     * Pitch 
+     * 
+     * changes the pitch of the phoneme note
+     */
     private float pitch;
+
+    public Phoneme(){
+        //i am so dumb
+    }
+
+    public Phoneme(String file, int offset, int overlap,int consonant,int preuttrance, int cutoff) throws Exception{
+        this.ais = AudioSystem.getAudioInputStream(StringToFile(file));
+        this.fileName = file;
+        //this.alias = alias;
+        this.offset = offset;
+        this.overlap = overlap;
+        this.cutoff = cutoff;
+        this.consonant = consonant;
+        this.preuttrance = preuttrance; // end of constantant to beginning of vowel
+        this.byteStream = AISToByte(ais);
+        //this.comment = comment;
+    }
+
+    /** 
+     * @deprecated
+     * DONT USE THIS OVERLOADED CLASS ANYMORE
+     * 
+     *  */
 
     public Phoneme(File file, int offset, int overlap, int cutoff, int preuttrance, int audioLoopStart, int audioLoopEnd) throws Exception{
         this.ais = AudioSystem.getAudioInputStream(file);
@@ -26,7 +110,7 @@ public class Phoneme{
         this.audioLoopStart = audioLoopStart;
         this.audioLoopEnd = audioLoopEnd;
         this.cutoff = cutoff;
-        this.preuttrance = preuttrance;
+        this.preuttrance = preuttrance; // end of constantant to beginning of vowel
         this.byteStream = AISToByte(ais);
     }
 
@@ -50,12 +134,57 @@ public class Phoneme{
 
     // get / set
 
+    private File StringToFile(String text){
+        File file = new File(text);
+        return file;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
     public float getPitch(){
         return this.pitch;
     }
 
     public void setPitch(float pitch){
         this.pitch = pitch;
+    }
+
+    public void setFileName(String fs){
+        this.fileName = fs;
+    }
+
+    public String getFileName(){
+        return this.fileName;
+    }
+
+    public void setAlias(String alias){
+        this.alias = alias;
+    }
+
+    public String getAlias(){
+        return this.alias;
+    }
+
+    public void setComment(String comment){
+        this.comment = comment;
+    }
+
+    public String getComment(){
+        return this.comment;
+    }
+
+    public int getConsonant() {
+        return consonant;
+    }
+
+    public void setConsonant(int consonant) {
+        this.consonant = consonant;
     }
 
     public byte[] getProcessedByteStream(){
@@ -130,12 +259,16 @@ public class Phoneme{
     }
 
     public void printAll(){
+        System.out.println(id);
+        System.out.println(fileName);
+        System.out.println(alias);
         System.out.println(offset);
         System.out.println(overlap);
         System.out.println(cutoff);
         System.out.println(preuttrance);
         System.out.println(audioLoopStart);
         System.out.println(audioLoopEnd);
+        System.out.println(comment);
         
     }
 

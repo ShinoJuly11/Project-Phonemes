@@ -3,6 +3,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.sound.sampled.*; // the only dependancy in this whole thing
@@ -28,7 +29,9 @@ public class App {
         //test_tarsosdsp();
         //test_solaAlgorithm_stretchAudio();
 
-        test_NoteUi();
+        //test_NoteUi();
+
+        test_sqlite();
     };
 
 
@@ -39,6 +42,46 @@ public class App {
         Phoneme phoneme = new Phoneme(file1,400,25,35,700,10000,30000);
         NoteUi ni = new NoteUi(phoneme);
         ni.createBox();
+
+    }
+
+    private static void test_sqlite() throws Exception{
+        Database sql = new Database();
+
+        sql.connectDatabase();
+        sql.createTable();
+        
+        Phoneme note1 = new Phoneme("sound/hello.wav",400,25,35,400,500);
+        Phoneme note2 = new Phoneme("sound/ko.wav",4000,20,350,4000,5000);
+        note1.setAlias("test");
+        note1.setComment("test Comment Lorem Ispum");
+        note2.setAlias("ke");
+        note2.setComment("test2000 Comment Lorem Ispum");
+
+        sql.insertPhoneme(note1);
+        sql.insertPhoneme(note2);
+
+        List<Phoneme> pArray = sql.selectAllPhoneme();
+
+        for (Phoneme phoneme : pArray){
+            phoneme.printAll();
+        }
+
+        sql.updatePhoneme(note1, phonemeStrings.COMMENT, "new Test message");
+
+        pArray = sql.selectAllPhoneme();
+
+        for (Phoneme phoneme : pArray){
+            phoneme.printAll();
+        }
+
+        sql.deleteData(phonemeStrings.FILENAME, "sound/ko.wav");
+
+        pArray = sql.selectAllPhoneme();
+
+        for (Phoneme phoneme : pArray){
+            phoneme.printAll();
+        }
 
     }
 

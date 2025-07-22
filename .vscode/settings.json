@@ -3,6 +3,7 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "/Users/laforgapmac/Downloads/TarsosDSP-latest.jar"
+        "/Users/laforgapmac/Downloads/TarsosDSP-latest.jar",
+        "/Users/laforgapmac/Downloads/sqlite-jdbc-3.50.3.0.jar"
     ]
 }
