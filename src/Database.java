@@ -114,11 +114,11 @@ public class Database{
         String sql = null;
 
         switch (randText){
-            case OFFSET -> sql = "UPDATE notes SET offset = ? WHERE offset = ?";
-            case OVERLAP -> sql = "UPDATE notes SET overlap = ? WHERE overlap = ?";
-            case CONSONANT -> sql = "UPDATE notes SET consonant = ? WHERE consonant = ?";
-            case CUTOFF -> sql = "UPDATE notes SET cutoff = ? WHERE cutoff = ?";
-            case PREUTTRANCE -> sql = "UPDATE notes SET preutturance = ? WHERE preutturance = ?";
+            case OFFSET -> sql = "UPDATE notes SET offset = ? WHERE offset = ? AND fileName = ?";
+            case OVERLAP -> sql = "UPDATE notes SET overlap = ? WHERE overlap = ? AND fileName = ?";
+            case CONSONANT -> sql = "UPDATE notes SET consonant = ? WHERE consonant = ? AND fileName = ?";
+            case CUTOFF -> sql = "UPDATE notes SET cutoff = ? WHERE cutoff = ? AND fileName = ?";
+            case PREUTTRANCE -> sql = "UPDATE notes SET preuttrance = ? WHERE preuttrance = ? AND fileName = ?";
             default -> System.err.println("inserted phonemeInts is not there");
         }
 
@@ -127,6 +127,7 @@ public class Database{
              var pstmt = conn.prepareStatement(sql)) {
             // set the parameters
             pstmt.setInt(1, newInt);
+            pstmt.setString(3,phoneme.getFileName());
 
         switch (randText){
             case OFFSET -> pstmt.setInt(2, phoneme.getOffset());

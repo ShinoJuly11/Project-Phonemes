@@ -84,6 +84,23 @@ public class Phoneme{
         //i am so dumb
     }
 
+    public Phoneme(Phoneme phoneme){
+
+        this.id = phoneme.id;
+        this.fileName = phoneme.fileName;
+        this.alias = phoneme.alias;
+        this.comment = phoneme.comment;
+        this.offset = phoneme.offset;
+        this.overlap = phoneme.overlap;
+        this.audioLoopStart = phoneme.audioLoopStart;
+        this.audioLoopEnd = phoneme.audioLoopEnd;
+        this.cutoff = phoneme.cutoff;
+        this.consonant = phoneme.consonant;
+        this.preuttrance = phoneme.preuttrance;
+        this.pitch = phoneme.pitch;
+        
+    }
+
     public Phoneme(String file, int offset, int overlap,int consonant,int preuttrance, int cutoff) throws Exception{
         this.ais = AudioSystem.getAudioInputStream(StringToFile(file));
         this.fileName = file;

@@ -61,27 +61,24 @@ public class App {
         sql.insertPhoneme(note1);
         sql.insertPhoneme(note2);
 
-        List<Phoneme> pArray = sql.selectAllPhoneme();
+        NoteDictionaryUi ndu = new NoteDictionaryUi();
+        ndu.run();
 
-        for (Phoneme phoneme : pArray){
-            phoneme.printAll();
-        }
+        // sql.updatePhoneme(note1, phonemeStrings.COMMENT, "new Test message");
 
-        sql.updatePhoneme(note1, phonemeStrings.COMMENT, "new Test message");
+        // pArray = sql.selectAllPhoneme();
 
-        pArray = sql.selectAllPhoneme();
+        // for (Phoneme phoneme : pArray){
+        //     phoneme.printAll();
+        // }
 
-        for (Phoneme phoneme : pArray){
-            phoneme.printAll();
-        }
+        // sql.deleteData(phonemeStrings.FILENAME, "sound/ko.wav");
 
-        sql.deleteData(phonemeStrings.FILENAME, "sound/ko.wav");
+        // pArray = sql.selectAllPhoneme();
 
-        pArray = sql.selectAllPhoneme();
-
-        for (Phoneme phoneme : pArray){
-            phoneme.printAll();
-        }
+        // for (Phoneme phoneme : pArray){
+        //     phoneme.printAll();
+        // }
 
     }
 

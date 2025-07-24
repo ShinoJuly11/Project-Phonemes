@@ -1,7 +1,8 @@
-import javax.sound.sampled.AudioInputStream;
 import javax.swing.*; // UI implementation
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class NoteUi{
@@ -9,6 +10,7 @@ public class NoteUi{
     int yAxis = 800;
     int xAxis = 800;
     Phoneme phoneme;
+    Phoneme phonemeClone;
 
 
     // THIS IS BLOOD SWEAT AND TEARS RIGHT HERE I HOPE I DONT GET A J*B IN UI
@@ -654,6 +656,7 @@ public class NoteUi{
 
     public NoteUi(Phoneme phoneme){
         this.phoneme = phoneme;
+        this.phonemeClone = new Phoneme(phoneme);
 
     }
 
@@ -667,8 +670,24 @@ public class NoteUi{
         frame.add(gl);
 
         frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e){
+                Database db = new Database();
+                
+                db.updatePhoneme(phonemeClone, phonemeInts.CONSONANT, phoneme.getConsonant());
+                db.updatePhoneme(phonemeClone, phonemeInts.CUTOFF, phoneme.getCutoff());
+                db.updatePhoneme(phonemeClone, phonemeInts.PREUTTRANCE, phoneme.getPreuttrance());
+                db.updatePhoneme(phonemeClone, phonemeInts.OVERLAP, phoneme.getOverlap());
+                db.updatePhoneme(phonemeClone, phonemeInts.OFFSET, phoneme.getOffset());
+                db.updatePhoneme(phonemeClone, phonemeStrings.FILENAME, phoneme.getFileName());
+                db.updatePhoneme(phonemeClone, phonemeStrings.ALIAS, phoneme.getAlias());
+                db.updatePhoneme(phonemeClone, phonemeStrings.COMMENT, phoneme.getComment());
+                
+            }
+            
+        });
 
     }
 }
