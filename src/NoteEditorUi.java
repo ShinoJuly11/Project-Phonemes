@@ -1,0 +1,133 @@
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+public class NoteEditorUi {
+
+    JTable noteTable; 
+
+    public NoteEditorUi(){
+        noteTable = new JTable();
+
+    }
+
+    public void run(){
+        var f = new JFrame();
+        f.setTitle("Note Editor Ui");
+        createTable();
+        var scrollPane = new JScrollPane(noteTable); 
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        f.add(scrollPane);
+        
+        f.setSize(500,500);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+        
+
+    }
+
+    public void createTable(){
+
+        
+
+        Boolean[][] noteNumber = new Boolean[20][20];
+        String[] tickNumber = new String[20];
+
+        for (int i = 0; i < noteNumber.length; i++) {
+            for (int j = 0; j < noteNumber[i].length; j++) {
+                noteNumber[i][j] = Boolean.FALSE;
+            }
+        }
+
+        for (int i = 0; i < tickNumber.length; i++){
+            tickNumber[i] = Integer.toString(i+1);
+        }
+
+        noteTable.addMouseListener(new MouseAdapter(){
+
+            int row;
+            int startColumn, endColumn;
+            Object value;
+            boolean flag;
+
+        @Override
+        public void mousePressed(MouseEvent e){
+            row = noteTable.rowAtPoint(e.getPoint());
+            startColumn = noteTable.columnAtPoint(e.getPoint());
+            value = noteTable.getValueAt(row, startColumn);
+            flag = value.toString().equals("false") ? true : false;
+            noteTable.setValueAt(flag, row, startColumn);
+        }
+
+        @Override
+            public void mouseReleased(MouseEvent e) {
+                endColumn = noteTable.columnAtPoint(e.getPoint());
+
+                int from = Math.min(startColumn, endColumn);
+                int to = Math.max(startColumn, endColumn);
+
+                for (int col = from; col <= to; col++) {
+                    noteTable.setValueAt(flag, row, col);
+                }
+            }
+
+        });
+
+        DefaultTableModel newTable = new DefaultTableModel(noteNumber, tickNumber) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // All cells are read-only
+            }
+        };
+        noteTable.setModel(newTable);
+
+        noteTable.setRowHeight(30); // Set row height
+        for (int i = 0; i < noteTable.getColumnCount(); i++) {
+            noteTable.getColumnModel().getColumn(i).setPreferredWidth(20); // Set column width
+            
+        }
+        
+        noteTable.getTableHeader().setReorderingAllowed(false);
+        noteTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        noteTable.setShowGrid(true);
+        noteTable.setGridColor(Color.GRAY);
+        noteTable.setSelectionBackground(Color.WHITE);
+        noteTable.setSelectionForeground(Color.BLACK);
+
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                // Example: color based on Boolean value
+                if (value instanceof Boolean && (Boolean) value) {
+                    c.setBackground(Color.GREEN);
+                } else {
+                    c.setBackground(Color.WHITE);
+                }
+                 
+                return c;
+            }
+        };
+
+        // Apply renderer to all columns
+        for (int i = 0; i < noteTable.getColumnCount(); i++) {
+            noteTable.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+        }        
+
+
+
+
+
+    }
+
+}

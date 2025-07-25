@@ -9,7 +9,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +17,7 @@ public class NoteDictionaryUi {
 
     String[][] data;
     String[] columnNames;
-    int selectedRow;
+    int selectedRow = -1;
     String selected = "";
     JTable j = new JTable();
     Database sql = new Database();
@@ -58,14 +57,14 @@ public class NoteDictionaryUi {
 
 
         JButton create = new JButton("Create");
-        JButton update = new JButton("Update");
+        JButton update = new JButton("Update Table");
         JButton edit = new JButton("Edit");
         JButton delete = new JButton("Delete");
 
         add(text);
         add(textVar);
-        add(create);
         add(update);
+        add(create);
         add(edit);
         add(delete);
 
@@ -76,10 +75,11 @@ public class NoteDictionaryUi {
 
         edit.addActionListener(e -> {
 
-            Phoneme phoneme;
-            String[] tempData = data[selectedRow];
-
             try {
+
+                Phoneme phoneme;
+                String[] tempData = data[selectedRow];
+
                 phoneme = new Phoneme(tempData[0],
                                               Integer.parseInt(tempData[2]),
                                               Integer.parseInt(tempData[3]),
@@ -94,7 +94,10 @@ public class NoteDictionaryUi {
                 NoteUi noteUi = new NoteUi(phoneme);
                 noteUi.createBox();
 
-            } catch (Exception e1) {
+            } catch (ArrayIndexOutOfBoundsException e2){
+                System.out.println("selected nothing");
+            }
+            catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
@@ -117,10 +120,6 @@ public class NoteDictionaryUi {
         public void updateSelected(String newSelected) {
         textVar.setText(newSelected);
     }
-
-
-        
-        
 
     }
 

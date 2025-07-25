@@ -30,9 +30,25 @@ public class App {
         //test_solaAlgorithm_stretchAudio();
 
         //test_NoteUi();
+        //test_sqlite();
 
-        test_sqlite();
+        test_NoteEditorUi();
+
+
     };
+
+    private static void test_NoteEditorUi() throws Exception{
+        new NoteEditorUi().run();
+        
+        
+
+    }
+
+    private static void test_pianoRollEditor() throws Exception{
+        new PianoRollEditor();
+        
+
+    }
 
 
     // test for text to graphemes
