@@ -17,7 +17,6 @@ public class EditorController implements Controller {
 
     public void update(Boolean[][] newNote){
         tableConcatenator(newNote);
-        
     }
 
     public void setTickNumber(String[] s){
@@ -51,19 +50,32 @@ public class EditorController implements Controller {
 
     }
 
-    public void tableConcatenator(Boolean[][] add){
-            
-        System.arraycopy(noteNumber, 0, add, noteNumber.length, add.length);
+    public void tableConcatenator(Boolean[][] add) {
+    int rows = noteNumber.length;
+    int oldCols = noteNumber[0].length;
+    int newCols = 20;
 
-        tickNumber = new String[noteNumber.length + add.length];
+    // Create a new array with combined columns
+    Boolean[][] combined = new Boolean[rows][oldCols + newCols];
 
-        for (int i = 0; i <= (noteNumber.length + add.length); i++){
-            tickNumber[i] = Integer.toString(i);
+    for (int i = 0; i < combined.length; i++) {
+            for (int j = 0; j < combined[i].length; j++) {
+                combined[i][j] = Boolean.FALSE;
+            }
         }
 
+    // Copy old data
+    for (int i = 0; i < rows; i++) {
+        System.arraycopy(noteNumber[i], 0, combined[i], 0, oldCols);
+    }
+
+    noteNumber = combined;
+
+    // Update tickNumber for new column count
+    tickNumber = new String[noteNumber[0].length];
+    for (int i = 0; i < tickNumber.length; i++) {
+        tickNumber[i] = Integer.toString(i + 1);
     }
     
-
-
-
+    }
 }

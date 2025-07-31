@@ -36,16 +36,25 @@ public class NoteTableEditorUi implements TableEditorUi{
         return this.noteNumber;
     }
 
-    public void process(Boolean[][] a, String[] b){
-        setNoteNumber(a);
-        setTickNumber(b);
-        process();
+    public boolean checkIftheArrayHasData(Boolean[][] matrix) {
+    if (matrix.length == 0) return false;
+    int colCount = matrix[0].length;
+    int startCol = Math.max(0, colCount - 10);
+    for (int i = 0; i < matrix.length; i++) {
+        for (int j = startCol; j < colCount; j++) {
+            if (Boolean.TRUE.equals(matrix[i][j])) {
+                return true;
+            }
+        }
     }
+    return false;
+}
 
     public void process() {
         var f = new JFrame();
         f.setTitle("Note Editor Ui");
         createTable();
+        updateTable(noteNumber, tickNumber);
         var scrollPane = new JScrollPane(noteTable); 
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         f.add(scrollPane);
@@ -55,10 +64,6 @@ public class NoteTableEditorUi implements TableEditorUi{
         f.setVisible(true);
         
 
-    }
-
-    public void updateTable(){
-        updateTable(noteNumber, tickNumber);
     }
 
     private void createTable(){
@@ -72,11 +77,17 @@ public class NoteTableEditorUi implements TableEditorUi{
 
         @Override
         public void mousePressed(MouseEvent e){
+
             row = noteTable.rowAtPoint(e.getPoint());
             startColumn = noteTable.columnAtPoint(e.getPoint());
             value = noteTable.getValueAt(row, startColumn);
             flag = value.toString().equals("false") ? true : false;
+            noteNumber[row][startColumn] = flag;
             noteTable.setValueAt(flag, row, startColumn);
+
+            if(checkIftheArrayHasData(noteNumber)){
+                    mediator.NoteTableEditorUiUpdate();
+            }
         }
 
         @Override
@@ -87,18 +98,21 @@ public class NoteTableEditorUi implements TableEditorUi{
                 int to = Math.max(startColumn, endColumn);
 
                 for (int col = from; col <= to; col++) {
+                    noteNumber[row][col] = flag;
                     noteTable.setValueAt(flag, row, col);
                 }
+
+                if(checkIftheArrayHasData(noteNumber)){
+                    mediator.NoteTableEditorUiUpdate();
+                }
+
             }
 
         });
 
-        updateTable(noteNumber, tickNumber);   
-
-
     }
 
-    private void updateTable(Boolean[][] noteNumber, String[] tickNumber){
+    public void updateTable(Boolean[][] noteNumber, String[] tickNumber){
         DefaultTableModel newTable = new DefaultTableModel(noteNumber, tickNumber) {
         @Override
         public boolean isCellEditable(int row, int column) {

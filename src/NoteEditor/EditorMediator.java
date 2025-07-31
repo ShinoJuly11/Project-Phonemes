@@ -10,15 +10,21 @@ public class EditorMediator implements Mediator {
         this.b = new EditorController(this);
 
         b.process();
-        a.process(b.getNoteNumber(),b.getTickNumber());
+        getAll();
+        a.process();
 
+    }
 
+    public void getAll(){
+        a.setNoteNumber(b.getNoteNumber());
+        a.setTickNumber(b.getTickNumber());
     }
 
     public void NoteTableEditorUiUpdate(){
 
         b.update(a.getNoteNumber());
-        a.process(b.getNoteNumber(), b.getTickNumber());
+        getAll();
+        a.updateTable(b.getNoteNumber(), b.getTickNumber());
 
         
     }
