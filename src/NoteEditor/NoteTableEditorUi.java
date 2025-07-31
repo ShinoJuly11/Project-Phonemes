@@ -1,8 +1,8 @@
+package NoteEditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -10,16 +10,39 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class NoteEditorUi {
+public class NoteTableEditorUi implements TableEditorUi{
 
-    JTable noteTable; 
+    JTable noteTable = new JTable();
+    Boolean[][] noteNumber;
+    String[] tickNumber;
+    Mediator mediator;
 
-    public NoteEditorUi(){
-        noteTable = new JTable();
-
+    public NoteTableEditorUi(Mediator mediator){
+        this.mediator = mediator;
     }
 
-    public void run(){
+    // set getters for the mediator
+
+    public void setTickNumber(String[] s){
+        this.tickNumber = s;
+    }
+    public String[] getTickNumber(){
+        return this.tickNumber;
+    }
+    public void setNoteNumber(Boolean[][] s){
+        this.noteNumber = s;
+    }
+    public Boolean[][] getNoteNumber(){
+        return this.noteNumber;
+    }
+
+    public void process(Boolean[][] a, String[] b){
+        setNoteNumber(a);
+        setTickNumber(b);
+        process();
+    }
+
+    public void process() {
         var f = new JFrame();
         f.setTitle("Note Editor Ui");
         createTable();
@@ -34,22 +57,11 @@ public class NoteEditorUi {
 
     }
 
-    public void createTable(){
+    public void updateTable(){
+        updateTable(noteNumber, tickNumber);
+    }
 
-        
-
-        Boolean[][] noteNumber = new Boolean[20][20];
-        String[] tickNumber = new String[20];
-
-        for (int i = 0; i < noteNumber.length; i++) {
-            for (int j = 0; j < noteNumber[i].length; j++) {
-                noteNumber[i][j] = Boolean.FALSE;
-            }
-        }
-
-        for (int i = 0; i < tickNumber.length; i++){
-            tickNumber[i] = Integer.toString(i+1);
-        }
+    private void createTable(){
 
         noteTable.addMouseListener(new MouseAdapter(){
 
@@ -81,6 +93,12 @@ public class NoteEditorUi {
 
         });
 
+        updateTable(noteNumber, tickNumber);   
+
+
+    }
+
+    private void updateTable(Boolean[][] noteNumber, String[] tickNumber){
         DefaultTableModel newTable = new DefaultTableModel(noteNumber, tickNumber) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -116,18 +134,18 @@ public class NoteEditorUi {
                 }
                  
                 return c;
+
+                
             }
         };
 
-        // Apply renderer to all columns
-        for (int i = 0; i < noteTable.getColumnCount(); i++) {
-            noteTable.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
-        }        
+            // Apply renderer to all columns
+            for (int i = 0; i < noteTable.getColumnCount(); i++) {
+                noteTable.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+            }     
+            
+        };
 
-
-
-
-
-    }
-
+        
 }
+

@@ -10,6 +10,10 @@ import javax.sound.sampled.*; // the only dependancy in this whole thing
 
 import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
+import NoteEditor.EditorController;
+import NoteEditor.EditorMediator;
+import NoteEditor.NoteTableEditorUi;
+import NoteEditor.Mediator;
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.FadeIn;
 import be.tarsos.dsp.FadeOut;
@@ -38,7 +42,9 @@ public class App {
     };
 
     private static void test_NoteEditorUi() throws Exception{
-        new NoteEditorUi().run();
+        Mediator m = new EditorMediator();
+        m.process();
+       
         
         
 
