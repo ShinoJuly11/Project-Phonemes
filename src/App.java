@@ -6,26 +6,17 @@ import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.sound.sampled.*; // the only dependancy in this whole thing
+import javax.sound.sampled.*;
 
 import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
-import NoteEditor.EditorController;
 import NoteEditor.EditorMediator;
-import NoteEditor.NoteTableEditorUi;
 import NoteEditor.Mediator;
+import NoteEditor.TableToClass;
 import be.tarsos.dsp.AudioDispatcher;
-import be.tarsos.dsp.FadeIn;
-import be.tarsos.dsp.FadeOut;
-import be.tarsos.dsp.GainProcessor;
-import be.tarsos.dsp.PitchShifter;
-import be.tarsos.dsp.SilenceDetector;
 import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
-import be.tarsos.dsp.io.TarsosDSPAudioFormat;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.io.jvm.AudioPlayer;
-import be.tarsos.dsp.util.fft.WindowFunction;
-import be.tarsos.dsp.writer.WriterProcessor;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -36,7 +27,8 @@ public class App {
         //test_NoteUi();
         //test_sqlite();
 
-        test_NoteEditorUi();
+        //test_NoteEditorUi();
+        test_TableToClass();
 
 
     };
@@ -44,10 +36,20 @@ public class App {
     private static void test_NoteEditorUi() throws Exception{
         Mediator m = new EditorMediator();
         m.process();
-       
-        
         
 
+    }
+
+    private static void test_TableToClass() throws Exception{
+
+        Boolean[][] testArray = {{false,false,false,false,false,false}
+                                ,{false,true,true,true,false,false},
+                                 {true,true,false,false,true,true},
+                                 {true,true,true,true,true,true}
+                                };
+
+        TableToClass ttc = new TableToClass(testArray);
+        ttc.process();
     }
 
     private static void test_pianoRollEditor() throws Exception{

@@ -1,6 +1,6 @@
 package NoteEditor;
 
-public interface Controller {
+public interface Controller{
     public void process();
     public void update(Boolean[][] newNote);
     public void setTickNumber(String[] s);
