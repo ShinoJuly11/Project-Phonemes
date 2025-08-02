@@ -10,13 +10,13 @@ public class PianoRollEditor {
 
     public PianoRollEditor() throws Exception{
 
-        Sequence sequence = new Sequence(Sequence.PPQ, 24);
+        Sequence sequence = new Sequence(Sequence.PPQ, 12);
         Track track = sequence.createTrack();
 
         // Add a NOTE ON event (Middle C)
         ShortMessage noteOn = new ShortMessage();
         noteOn.setMessage(ShortMessage.NOTE_ON, 0, 70, 100); // channel, note, velocity
-        track.add(new MidiEvent(noteOn, 1)); // tick = 1
+        track.add(new MidiEvent(noteOn, 0)); // tick = 1
 
         // Add a NOTE OFF event (stop note)
         ShortMessage noteOff = new ShortMessage();
@@ -25,12 +25,12 @@ public class PianoRollEditor {
 
         // Add a NOTE ON event (Middle C)
         ShortMessage noteOn1 = new ShortMessage();
-        noteOn.setMessage(ShortMessage.NOTE_ON, 1, 60, 100); // channel, note, velocity
+        noteOn1.setMessage(ShortMessage.NOTE_ON, 0, 60, 100); // channel, note, velocity
         track.add(new MidiEvent(noteOn1, 64)); // tick = 1
 
         // Add a NOTE OFF event (stop note)
         ShortMessage noteOff1 = new ShortMessage();
-        noteOff.setMessage(ShortMessage.NOTE_OFF, 1, 60, 0);
+        noteOff1.setMessage(ShortMessage.NOTE_OFF, 0, 60, 0);
         track.add(new MidiEvent(noteOff1, 128)); // tick = 16
 
         // Save the file

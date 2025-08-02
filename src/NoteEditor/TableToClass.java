@@ -2,32 +2,11 @@ package NoteEditor;
 
 import java.util.ArrayList;
 
-public class TableToClass {
+public class TableToClass implements NoteTableConverter {
 
     Mediator mediator;
     Boolean[][] noteNumber;
-
-    public class MidiNote {
-
-        int noteLength, row;
-        int start, end;
-
-        public MidiNote(int row ,int noteLength, int start, int end){
-            this.noteLength = noteLength;
-            this.start = start;
-            this.end = end;
-            this.row = row;
-        }
-
-        public void printAll(){
-            System.out.println(Integer.toString(row)+ "\t" + Integer.toString(noteLength)+ "\t" +Integer.toString(start)+ "\t" +Integer.toString(end));
-        }
-
-    }
-
-    public TableToClass(Boolean[][] noteNumber){
-        setNoteNumber(noteNumber);
-    }
+    ArrayList<MidiNote> MidiNoteArray;
 
 
     public TableToClass(Mediator mediator){
@@ -38,9 +17,14 @@ public class TableToClass {
         this.noteNumber = noteNumber;
     }
 
+    public ArrayList<MidiNote> getMidiNoteArray(){
+        return this.MidiNoteArray;
+    }
+
     public void process(){
 
-        ArrayList<MidiNote> MidiNoteArray = new ArrayList<>();
+        
+        this.MidiNoteArray = new ArrayList<>();
 
         for (int i = 0; i < noteNumber.length; i++) {
             int count = 0;
@@ -48,12 +32,12 @@ public class TableToClass {
             for (int j = 0; j < noteNumber[i].length; j++) {
                 if (Boolean.TRUE.equals(noteNumber[i][j])) {
                     if (count == 0) {
-                        start = j;
+                        start = j+1;
                     }
                     count++;
                 } else {
                     if (count > 0) {
-                        int end = j - 1;
+                        int end = j;
                         MidiNote note = new MidiNote(i, count, start, end);
                         MidiNoteArray.add(note);
                         count = 0; // Reset for next possible note
@@ -68,7 +52,7 @@ public class TableToClass {
             }
         }
 
-        for (MidiNote note : MidiNoteArray){
+        for (MidiNote note : this.MidiNoteArray){
             note.printAll();
         }
 

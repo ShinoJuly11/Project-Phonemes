@@ -39,7 +39,7 @@ public class NoteTableEditorUi implements TableEditorUi{
     public boolean checkIftheArrayHasData(Boolean[][] matrix) {
     if (matrix.length == 0) return false;
     int colCount = matrix[0].length;
-    int startCol = Math.max(0, colCount - 10);
+    int startCol = Math.max(0, colCount - 20);
     for (int i = 0; i < matrix.length; i++) {
         for (int j = startCol; j < colCount; j++) {
             if (Boolean.TRUE.equals(matrix[i][j])) {
@@ -51,17 +51,12 @@ public class NoteTableEditorUi implements TableEditorUi{
 }
 
     public void process() {
-        var f = new JFrame();
-        f.setTitle("Note Editor Ui");
+        JFrame f = mediator.getJFrame();
         createTable();
         updateTable(noteNumber, tickNumber);
         var scrollPane = new JScrollPane(noteTable); 
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         f.add(scrollPane);
-        
-        f.setSize(500,500);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
         
 
     }
@@ -86,7 +81,7 @@ public class NoteTableEditorUi implements TableEditorUi{
             noteTable.setValueAt(flag, row, startColumn);
 
             if(checkIftheArrayHasData(noteNumber)){
-                    mediator.NoteTableEditorUiUpdate();
+                    mediator.TableUpdate();
             }
         }
 
@@ -103,7 +98,7 @@ public class NoteTableEditorUi implements TableEditorUi{
                 }
 
                 if(checkIftheArrayHasData(noteNumber)){
-                    mediator.NoteTableEditorUiUpdate();
+                    mediator.TableUpdate();
                 }
 
             }

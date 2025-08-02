@@ -7,6 +7,8 @@ public class EditorController implements Controller {
 
     Mediator mediator;
 
+    int newCols = 60;
+
     public EditorController(Mediator mediator){
         this.mediator = mediator;
     }
@@ -35,8 +37,8 @@ public class EditorController implements Controller {
 
     public void tables(){
 
-        noteNumber = new Boolean[20][20];
-        tickNumber = new String[20];
+        noteNumber = new Boolean[newCols][newCols];
+        tickNumber = new String[newCols];
 
         for (int i = 0; i < noteNumber.length; i++) {
             for (int j = 0; j < noteNumber[i].length; j++) {
@@ -53,7 +55,6 @@ public class EditorController implements Controller {
     public void tableConcatenator(Boolean[][] add) {
     int rows = noteNumber.length;
     int oldCols = noteNumber[0].length;
-    int newCols = 20;
 
     // Create a new array with combined columns
     Boolean[][] combined = new Boolean[rows][oldCols + newCols];
@@ -76,6 +77,6 @@ public class EditorController implements Controller {
     for (int i = 0; i < tickNumber.length; i++) {
         tickNumber[i] = Integer.toString(i + 1);
     }
-    
+
     }
 }
