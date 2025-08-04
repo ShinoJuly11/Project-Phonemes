@@ -9,6 +9,7 @@ public interface Mediator {
     public JFrame getJFrame();
     public void TableUpdate();
     public void convertTableToClass();
+    public NoteTableConverter getTableToClass();
 
     
 }

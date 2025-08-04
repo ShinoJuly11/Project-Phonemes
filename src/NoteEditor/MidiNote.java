@@ -3,6 +3,7 @@ package NoteEditor;
 public class MidiNote {
 
     private int noteLength, row, start, end;
+    private String alias;
 
     public MidiNote(int row ,int noteLength, int start, int end){
         this.noteLength = noteLength;

@@ -1,10 +1,16 @@
 package NoteEditor;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -13,6 +19,9 @@ import javax.swing.table.DefaultTableModel;
 public class NoteTableEditorUi implements TableEditorUi{
 
     JTable noteTable = new JTable();
+    JPanel overlay = new JPanel();
+    JScrollPane scrollPane; 
+    JLayeredPane layeredPane = new JLayeredPane();
     Boolean[][] noteNumber;
     String[] tickNumber;
     Mediator mediator;
@@ -51,15 +60,32 @@ public class NoteTableEditorUi implements TableEditorUi{
 }
 
     public void process() {
-        JFrame f = mediator.getJFrame();
+
         createTable();
         updateTable(noteNumber, tickNumber);
-        var scrollPane = new JScrollPane(noteTable); 
+
+        JFrame f = mediator.getJFrame();
+        GridBagConstraints constraints = new GridBagConstraints();
+
+
+        layeredPane.add(noteTable, Integer.valueOf(0));
+        //layeredPane.add(overlay, Integer.valueOf(1));
+
+        scrollPane = new JScrollPane(layeredPane);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        f.add(scrollPane);
+
+        constraints.weightx = 4;
+        constraints.weighty = 3;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.fill = GridBagConstraints.BOTH;
+
+        f.add(scrollPane, constraints);
         
 
     }
+
+    
 
     private void createTable(){
 
@@ -72,9 +98,25 @@ public class NoteTableEditorUi implements TableEditorUi{
 
         @Override
         public void mousePressed(MouseEvent e){
+            if (e.isPopupTrigger()){
+                System.out.println("worked");
+            }
+            else{
 
             row = noteTable.rowAtPoint(e.getPoint());
             startColumn = noteTable.columnAtPoint(e.getPoint());
+
+            Rectangle rect = noteTable.getCellRect(row, startColumn, true);
+            int x = rect.x;
+            int y = rect.y;
+
+            JLabel label = new JLabel("TEST");
+            label.setBounds(x, y + noteTable.getRowHeight(), 50, 12);
+            label.setOpaque(true);
+            layeredPane.add(label, Integer.valueOf(10));
+
+            System.out.println(x + "\t" + y);
+
             value = noteTable.getValueAt(row, startColumn);
             flag = value.toString().equals("false") ? true : false;
             noteNumber[row][startColumn] = flag;
@@ -83,6 +125,9 @@ public class NoteTableEditorUi implements TableEditorUi{
             if(checkIftheArrayHasData(noteNumber)){
                     mediator.TableUpdate();
             }
+        }
+
+            
         }
 
         @Override
@@ -108,19 +153,27 @@ public class NoteTableEditorUi implements TableEditorUi{
     }
 
     public void updateTable(Boolean[][] noteNumber, String[] tickNumber){
+
+        int width = 20;
         DefaultTableModel newTable = new DefaultTableModel(noteNumber, tickNumber) {
         @Override
         public boolean isCellEditable(int row, int column) {
-            return false; // All cells are read-only
+            return false;
             }
         };
         noteTable.setModel(newTable);
 
         noteTable.setRowHeight(30); // Set row height
         for (int i = 0; i < noteTable.getColumnCount(); i++) {
-            noteTable.getColumnModel().getColumn(i).setPreferredWidth(20); // Set column width
+            noteTable.getColumnModel().getColumn(i).setPreferredWidth(width); // Set column width
             
         }
+
+        // IDK HOW TO DECOPULE THIS CODE 
+
+        noteTable.setBounds(0, 0, noteTable.getColumnCount() * width, noteTable.getRowHeight() * noteTable.getRowCount());
+        overlay.setBounds(0, 0, (noteNumber[0].length * width), noteTable.getRowHeight() * noteTable.getRowCount());
+        layeredPane.setPreferredSize(new Dimension((noteNumber[0].length * width), noteTable.getRowHeight() * noteTable.getRowCount()));
         
         noteTable.getTableHeader().setReorderingAllowed(false);
         noteTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

@@ -1,10 +1,9 @@
 package NoteEditor;
-
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
 public class EditorMediator implements Mediator {
+
+    //istg if this class becomes GOD ill kms
 
     TableEditorUi a;
     Controller b;
@@ -40,10 +39,6 @@ public class EditorMediator implements Mediator {
         
     }
 
-    public NoteTableConverter ConvertClassToTable(){
-        return this.f;
-    }
-
     public void TableUpdate(){
 
         b.update(a.getNoteNumber());
@@ -54,6 +49,11 @@ public class EditorMediator implements Mediator {
 
     public JFrame getJFrame(){
         return c.getJFrame(); 
+
+    }
+
+    public NoteTableConverter getTableToClass(){
+        return this.e;
 
     }
 

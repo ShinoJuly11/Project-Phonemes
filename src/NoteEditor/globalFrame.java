@@ -1,7 +1,6 @@
 package NoteEditor;
 
-import java.awt.GridLayout;
-
+import java.awt.GridBagLayout;
 import javax.swing.JFrame;
 
 public class globalFrame implements InterfaceGui {
@@ -17,9 +16,9 @@ public class globalFrame implements InterfaceGui {
 
         this.f = new JFrame();
         this.f.setTitle("Note Editor Ui");
-        this.f.setSize(500,500);
+        this.f.setSize(800,600);
         this.f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.f.setLayout(new GridLayout(2,1));
+        this.f.setLayout(new GridBagLayout());
 
     }
 
