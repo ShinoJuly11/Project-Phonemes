@@ -20,6 +20,8 @@ public class globalFrame implements InterfaceGui {
         this.f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.f.setLayout(new GridBagLayout());
 
+        // well i hate my life being this convoluted in ui
+
     }
 
     public JFrame getJFrame(){

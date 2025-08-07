@@ -45,7 +45,6 @@ public class EditorMediator implements Mediator {
     }
 
     public void TableUpdate(){
-
         b.update(a.getNoteNumber());
         getAll();
         a.update(b.getNoteNumber(), b.getTickNumber());

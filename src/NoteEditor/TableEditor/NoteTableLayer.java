@@ -1,13 +1,29 @@
 package NoteEditor.TableEditor;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import NoteEditor.Mediator;
 import NoteEditor.TableEditorUi;
 
-public class BaseTableEditor {
+public class NoteTableLayer implements TableLayer{
 
     TableEditorUi mainTable;
+    JTable noteTable = new JTable();
+    JPanel overlay = new JPanel();
+    Boolean[][] noteNumber;
+    String[] tickNumber;
+    Mediator mediator;
+
+    public JTable getNoteTable(){
+        return this.noteTable;
+    }
 
     private boolean checkIftheArrayHasData(Boolean[][] matrix) {
     if (matrix.length == 0) return false;
@@ -39,12 +55,11 @@ public class BaseTableEditor {
             noteTable.getColumnModel().getColumn(i).setPreferredWidth(width); // Set column width
             
         }
-
         // IDK HOW TO DECOPULE THIS CODE 
 
         noteTable.setBounds(0, 0, noteTable.getColumnCount() * width, noteTable.getRowHeight() * noteTable.getRowCount());
         overlay.setBounds(0, 0, (noteNumber[0].length * width), noteTable.getRowHeight() * noteTable.getRowCount());
-        layeredPane.setPreferredSize(new Dimension((noteNumber[0].length * width), noteTable.getRowHeight() * noteTable.getRowCount()));
+        mainTable.getLayeredPane().setPreferredSize(new Dimension((noteNumber[0].length * width), noteTable.getRowHeight() * noteTable.getRowCount()));
         
         noteTable.getTableHeader().setReorderingAllowed(false);
         noteTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -81,20 +96,81 @@ public class BaseTableEditor {
 
 
 
-    public BaseTableEditor(TableEditorUi mainTable){
+    public NoteTableLayer(TableEditorUi mainTable){
+
         this.mainTable = mainTable;
+        this.noteNumber = mainTable.getNoteNumber();
+        this.tickNumber = mainTable.getTickNumber();
+        this.mediator = mainTable.getMediator();
+
+        process();
+
 
     }
 
     public void process(){
-
-
-    }
-
-    public void update(){
+        updateTable(noteNumber, tickNumber);
+        mouseFunction();
 
     }
 
+    public void update(Boolean[][] noteNumbers, String[] tickNumber){
+        updateTable(noteNumber, tickNumber);
+
+    }
+
+    private void mouseFunction(){
+
+        noteTable.addMouseListener(new MouseAdapter(){
+
+            int row;
+            int startColumn, endColumn;
+            Object value;
+            boolean flag;
+
+        @Override
+        public void mousePressed(MouseEvent e){
+                if (e.isPopupTrigger()){
+                    System.out.println("worked");
+                }
+
+                else{
+
+                row = noteTable.rowAtPoint(e.getPoint());
+                startColumn = noteTable.columnAtPoint(e.getPoint());
+
+                value = noteTable.getValueAt(row, startColumn);
+                flag = value.toString().equals("false") ? true : false;
+                noteNumber[row][startColumn] = flag;
+                noteTable.setValueAt(flag, row, startColumn);
+
+                    if(checkIftheArrayHasData(noteNumber)){
+                            mediator.TableUpdate();
+                    }
+                
+                }
+            
+            }
+
+        @Override
+            public void mouseReleased(MouseEvent e) {
+                endColumn = noteTable.columnAtPoint(e.getPoint());
+
+                int from = Math.min(startColumn, endColumn);
+                int to = Math.max(startColumn, endColumn);
+
+                for (int col = from; col <= to; col++) {
+                    noteNumber[row][col] = flag;
+                    noteTable.setValueAt(flag, row, col);
+                }
+
+                if(checkIftheArrayHasData(noteNumber)){
+                    mediator.TableUpdate();
+                }
+
+            }
+        });
+    }
     
 
 }
