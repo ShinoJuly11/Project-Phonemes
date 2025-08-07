@@ -12,7 +12,7 @@ import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
 import NoteEditor.EditorMediator;
 import NoteEditor.Mediator;
-import NoteEditor.TableToClass;
+import NoteEditor.PlaybackButtons.TableToClass;
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
@@ -42,17 +42,17 @@ public class App {
 
     }
 
-    private static void test_TableToClass() throws Exception{
+    // private static void test_TableToClass() throws Exception{
 
-        Boolean[][] testArray = {{false,false,false,false,false,false}
-                                ,{false,true,true,true,false,false},
-                                 {true,true,false,false,true,true},
-                                 {true,true,true,true,true,true}
-                                };
+    //     Boolean[][] testArray = {{false,false,false,false,false,false}
+    //                             ,{false,true,true,true,false,false},
+    //                              {true,true,false,false,true,true},
+    //                              {true,true,true,true,true,true}
+    //                             };
 
-        TableToClass ttc = new TableToClass(testArray);
-        ttc.process();
-    }
+    //     TableToClass ttc = new TableToClass(testArray);
+    //     ttc.process();
+    // }
 
     private static void test_pianoRollEditor() throws Exception{
         new PianoRollEditor();

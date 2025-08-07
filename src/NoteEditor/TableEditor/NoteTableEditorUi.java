@@ -1,4 +1,4 @@
-package NoteEditor;
+package NoteEditor.TableEditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -15,6 +15,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import NoteEditor.Mediator;
+import NoteEditor.TableEditorUi;
 
 public class NoteTableEditorUi implements TableEditorUi{
 
@@ -152,7 +155,11 @@ public class NoteTableEditorUi implements TableEditorUi{
 
     }
 
-    public void updateTable(Boolean[][] noteNumber, String[] tickNumber){
+    public void update(Boolean[][] noteNumbers, String[] tickNumber){
+        updateTable(noteNumbers, tickNumber);
+    }
+
+    private void updateTable(Boolean[][] noteNumber, String[] tickNumber){
 
         int width = 20;
         DefaultTableModel newTable = new DefaultTableModel(noteNumber, tickNumber) {

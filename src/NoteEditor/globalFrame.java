@@ -8,7 +8,7 @@ public class globalFrame implements InterfaceGui {
     Mediator mediator;
     JFrame f;
 
-    globalFrame(Mediator mediator){
+    public globalFrame(Mediator mediator){
         this.mediator = mediator;
     }
 

@@ -1,6 +1,11 @@
 package NoteEditor;
 import javax.swing.JFrame;
 
+import NoteEditor.PlaybackButtons.ButtonsForTable;
+import NoteEditor.PlaybackButtons.ClassToTable;
+import NoteEditor.PlaybackButtons.TableToClass;
+import NoteEditor.TableEditor.NoteTableEditorUi;
+
 public class EditorMediator implements Mediator {
 
     //istg if this class becomes GOD ill kms
@@ -43,7 +48,7 @@ public class EditorMediator implements Mediator {
 
         b.update(a.getNoteNumber());
         getAll();
-        a.updateTable(b.getNoteNumber(), b.getTickNumber());
+        a.update(b.getNoteNumber(), b.getTickNumber());
 
     }
 

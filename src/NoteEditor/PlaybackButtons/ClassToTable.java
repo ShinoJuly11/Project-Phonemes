@@ -1,6 +1,10 @@
-package NoteEditor;
+package NoteEditor.PlaybackButtons;
 
 import java.util.ArrayList;
+
+import NoteEditor.Mediator;
+import NoteEditor.MidiNote;
+import NoteEditor.NoteTableConverter;
 
 public class ClassToTable implements NoteTableConverter {
 

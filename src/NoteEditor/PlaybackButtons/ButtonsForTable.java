@@ -1,4 +1,4 @@
-package NoteEditor;
+package NoteEditor.PlaybackButtons;
 
 import java.awt.GridBagConstraints;
 
@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import MidiLogicEngine.MidiConstructor;
+import NoteEditor.Mediator;
 
 public class ButtonsForTable {
 
