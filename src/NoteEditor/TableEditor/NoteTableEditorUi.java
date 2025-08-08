@@ -1,16 +1,9 @@
 package NoteEditor.TableEditor;
 
 import java.awt.GridBagConstraints;
-import java.awt.Rectangle;
-
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import NoteEditor.Mediator;
 import NoteEditor.TableEditorUi;
 
@@ -21,6 +14,8 @@ public class NoteTableEditorUi implements TableEditorUi{
     Mediator mediator;
     JScrollPane scrollPane; 
     JLayeredPane layeredPane;
+
+    //Layers inside the NoteTableEditor For LayeredPane
     TableLayer baseTable;
     PanelLayer AliasLayer;
 
@@ -85,6 +80,13 @@ public class NoteTableEditorUi implements TableEditorUi{
     public void update(Boolean[][] noteNumbers, String[] tickNumber){
         baseTable.update(noteNumbers, tickNumber);
         
+    }
+
+    public void tableUpdate(Boolean[][] noteNumber, String[] tickNumber){
+        
+        this.noteNumber = noteNumber;
+        this.tickNumber = tickNumber;
+        mediator.TableUpdate();
     }
 
         

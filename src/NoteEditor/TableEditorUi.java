@@ -14,6 +14,8 @@ public interface TableEditorUi {
     public Mediator getMediator();
     public JLayeredPane getLayeredPane();
     public TableLayer getBaseTable();
+    public void tableUpdate(Boolean[][] noteNumber, String[] tickNumber);
+    
 
 
 }

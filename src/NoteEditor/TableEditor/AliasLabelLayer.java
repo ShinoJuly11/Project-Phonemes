@@ -12,8 +12,6 @@ public class AliasLabelLayer implements PanelLayer{
 
     TableEditorUi TableEditor;
 
-
-    
     public AliasLabelLayer(TableEditorUi m){
         this.TableEditor = m;
         process();

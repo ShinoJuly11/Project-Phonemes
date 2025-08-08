@@ -25,6 +25,14 @@ public class NoteTableLayer implements TableLayer{
         return this.noteTable;
     }
 
+    public Boolean[][] getNoteNumber(){
+        return this.noteNumber;
+    }
+
+    public String[] getTickNumber(){
+        return this.tickNumber;
+    }
+
     private boolean checkIftheArrayHasData(Boolean[][] matrix) {
     if (matrix.length == 0) return false;
     int colCount = matrix[0].length;
@@ -39,7 +47,10 @@ public class NoteTableLayer implements TableLayer{
     return false;
     }
 
-    private void updateTable(Boolean[][] noteNumber, String[] tickNumber){
+    public void update(Boolean[][] noteNumber, String[] tickNumber){
+
+        this.noteNumber = mainTable.getNoteNumber();
+        this.tickNumber = mainTable.getTickNumber();
 
         int width = 20;
         DefaultTableModel newTable = new DefaultTableModel(noteNumber, tickNumber) {
@@ -99,9 +110,9 @@ public class NoteTableLayer implements TableLayer{
     public NoteTableLayer(TableEditorUi mainTable){
 
         this.mainTable = mainTable;
+        this.mediator = mainTable.getMediator();
         this.noteNumber = mainTable.getNoteNumber();
         this.tickNumber = mainTable.getTickNumber();
-        this.mediator = mainTable.getMediator();
 
         process();
 
@@ -109,13 +120,8 @@ public class NoteTableLayer implements TableLayer{
     }
 
     public void process(){
-        updateTable(noteNumber, tickNumber);
+        update(noteNumber, tickNumber);
         mouseFunction();
-
-    }
-
-    public void update(Boolean[][] noteNumbers, String[] tickNumber){
-        updateTable(noteNumber, tickNumber);
 
     }
 
@@ -145,7 +151,7 @@ public class NoteTableLayer implements TableLayer{
                 noteTable.setValueAt(flag, row, startColumn);
 
                     if(checkIftheArrayHasData(noteNumber)){
-                            mediator.TableUpdate();
+                            mainTable.update(noteNumber, tickNumber);
                     }
                 
                 }
@@ -165,7 +171,7 @@ public class NoteTableLayer implements TableLayer{
                 }
 
                 if(checkIftheArrayHasData(noteNumber)){
-                    mediator.TableUpdate();
+                    mainTable.tableUpdate(noteNumber,tickNumber);
                 }
 
             }
