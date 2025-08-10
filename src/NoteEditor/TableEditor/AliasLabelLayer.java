@@ -1,10 +1,9 @@
 package NoteEditor.TableEditor;
 
 import javax.swing.JLabel;
+import javax.swing.JTable;
 
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import NoteEditor.TableEditorUi;
 
@@ -19,7 +18,6 @@ public class AliasLabelLayer implements PanelLayer{
     }
 
     public void process(){
-        mouseFunction();
 
     }
     
