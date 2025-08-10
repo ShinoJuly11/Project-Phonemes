@@ -36,9 +36,8 @@ public class MouseListener{
                     value = noteTable.getValueAt(row, startColumn);
                     flag = value.toString().equals("false") ? true : false;
 
-                    mainTable.getBaseTable().handleMouseClick(noteTable, row, startColumn, flag);
                     mainTable.getAliasLayer().handleMouseClick(noteTable, row, startColumn);
-
+                    mainTable.getBaseTable().handleMouseClick(noteTable, row, startColumn, flag);
 
                 
                 }
@@ -48,7 +47,7 @@ public class MouseListener{
         @Override
             public void mouseReleased(MouseEvent e) {
                 endColumn = noteTable.columnAtPoint(e.getPoint());
-                mainTable.getBaseTable().handleMouseDrag(noteTable, startColumn, endColumn, row, endColumn, flag);
+                mainTable.getBaseTable().handleMouseDrag(noteTable, startColumn, endColumn, row, flag);
 
             }
         });

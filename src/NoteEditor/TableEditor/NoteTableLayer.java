@@ -120,7 +120,6 @@ public class NoteTableLayer implements TableLayer{
     }
 
     public void process(){
-        mouseFunction();
         update(noteNumber, tickNumber);
 
     }
@@ -135,7 +134,7 @@ public class NoteTableLayer implements TableLayer{
                     }
     }
 
-    public void handleMouseDrag(JTable noteTable, int startColumn, int endColumn, int row, int col, boolean flag){
+    public void handleMouseDrag(JTable noteTable, int startColumn, int endColumn, int row, boolean flag){
 
         int from = Math.min(startColumn, endColumn);
         int to = Math.max(startColumn, endColumn);

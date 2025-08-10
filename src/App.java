@@ -2,9 +2,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-
 import javax.sound.sampled.*;
-
 import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
 import NoteEditor.EditorMediator;
@@ -14,7 +12,7 @@ import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.io.jvm.AudioPlayer;
 
-public class App {
+public class App{
     public static void main(String[] args) throws Exception {
         //test_AudioProcessor();
         //test_tarsosdsp();

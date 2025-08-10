@@ -63,6 +63,9 @@ public class NoteTableEditorUi implements TableEditorUi{
 
         this.baseTable = new NoteTableLayer(this); // creates the base table
         this.AliasLayer = new AliasLabelLayer(this);
+        
+        MouseListener mouseListener = new MouseListener(this);
+        mouseListener.mouseFunction();
 
         layeredPane.add(baseTable.getNoteTable(), Integer.valueOf(0));
         //TableEditor.getLayeredPane().add(label, Integer.valueOf(10)); inside the AliasLayer Class
