@@ -27,40 +27,14 @@ public class AliasLabelLayer implements PanelLayer{
         
     }
 
-    private void mouseFunction(){
+    public void handleMouseClick(JTable noteTable, int row, int startColumn){
+        Rectangle rect = noteTable.getCellRect(row, startColumn, true);
+        int x = rect.x;
+        int y = rect.y;
 
-            var noteTable = TableEditor.getBaseTable().getNoteTable();
-
-            noteTable.addMouseListener(new MouseAdapter(){
-
-                int row;
-                int startColumn;
-
-                @Override
-                public void mousePressed(MouseEvent e){
-
-                    if (e.isPopupTrigger()){
-                        System.out.println("worked");
-                    }
-                    
-                    else{
-
-                    row = noteTable.rowAtPoint(e.getPoint());
-                    startColumn = noteTable.columnAtPoint(e.getPoint());
-
-                    Rectangle rect = noteTable.getCellRect(row, startColumn, true);
-                    int x = rect.x;
-                    int y = rect.y;
-
-                    JLabel label = new JLabel("TEST");
-                    label.setBounds(x, y + noteTable.getRowHeight(), 50, 12);
-                    label.setOpaque(true);
-                    TableEditor.getLayeredPane().add(label, Integer.valueOf(10));
-
-                    System.out.println(x + "\t" + y);
-                    }
-
-            }
-        });
-}
+        JLabel label = new JLabel("TEST");
+        label.setBounds(x, y + noteTable.getRowHeight(), 50, 12);
+        label.setOpaque(true);
+        TableEditor.getLayeredPane().add(label, Integer.valueOf(10));
+    }
 }

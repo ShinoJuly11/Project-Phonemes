@@ -33,6 +33,10 @@ public class NoteTableEditorUi implements TableEditorUi{
     public TableLayer getBaseTable(){
         return this.baseTable;
     }
+
+    public PanelLayer getAliasLayer(){
+        return this.AliasLayer;
+    }
     
     public JLayeredPane getLayeredPane(){
         return this.layeredPane;

@@ -120,62 +120,35 @@ public class NoteTableLayer implements TableLayer{
     }
 
     public void process(){
-        update(noteNumber, tickNumber);
         mouseFunction();
+        update(noteNumber, tickNumber);
 
     }
 
-    private void mouseFunction(){
+    public void handleMouseClick(JTable noteTable, int row, int startColumn, boolean flag){
 
-        noteTable.addMouseListener(new MouseAdapter(){
-
-            int row;
-            int startColumn, endColumn;
-            Object value;
-            boolean flag;
-
-        @Override
-        public void mousePressed(MouseEvent e){
-                if (e.isPopupTrigger()){
-                    System.out.println("worked");
-                }
-
-                else{
-
-                row = noteTable.rowAtPoint(e.getPoint());
-                startColumn = noteTable.columnAtPoint(e.getPoint());
-
-                value = noteTable.getValueAt(row, startColumn);
-                flag = value.toString().equals("false") ? true : false;
-                noteNumber[row][startColumn] = flag;
+                this.noteNumber[row][startColumn] = flag;
                 noteTable.setValueAt(flag, row, startColumn);
 
-                    if(checkIftheArrayHasData(noteNumber)){
-                            mainTable.update(noteNumber, tickNumber);
+                    if(checkIftheArrayHasData(this.noteNumber)){
+                            mainTable.update(this.noteNumber, this.tickNumber);
                     }
-                
-                }
-            
-            }
+    }
 
-        @Override
-            public void mouseReleased(MouseEvent e) {
-                endColumn = noteTable.columnAtPoint(e.getPoint());
+    public void handleMouseDrag(JTable noteTable, int startColumn, int endColumn, int row, int col, boolean flag){
 
-                int from = Math.min(startColumn, endColumn);
-                int to = Math.max(startColumn, endColumn);
+        int from = Math.min(startColumn, endColumn);
+        int to = Math.max(startColumn, endColumn);
 
-                for (int col = from; col <= to; col++) {
-                    noteNumber[row][col] = flag;
-                    noteTable.setValueAt(flag, row, col);
-                }
+        for (int col = from; col <= to; col++) {
+            this.noteNumber[row][col] = flag;
+            noteTable.setValueAt(flag, row, col);
+        }
 
-                if(checkIftheArrayHasData(noteNumber)){
-                    mainTable.tableUpdate(noteNumber,tickNumber);
-                }
+        if(checkIftheArrayHasData(this.noteNumber)){
+            mainTable.tableUpdate(this.noteNumber,this.tickNumber);
+        }
 
-            }
-        });
     }
     
 

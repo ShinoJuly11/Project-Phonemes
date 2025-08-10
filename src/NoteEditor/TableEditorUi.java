@@ -1,6 +1,7 @@
 package NoteEditor;
 import javax.swing.JLayeredPane;
 
+import NoteEditor.TableEditor.PanelLayer;
 import NoteEditor.TableEditor.TableLayer;
 
 public interface TableEditorUi {
@@ -14,6 +15,7 @@ public interface TableEditorUi {
     public Mediator getMediator();
     public JLayeredPane getLayeredPane();
     public TableLayer getBaseTable();
+    public PanelLayer getAliasLayer();
     public void tableUpdate(Boolean[][] noteNumber, String[] tickNumber);
     
 
