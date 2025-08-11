@@ -1,6 +1,7 @@
 package NoteEditor.TableEditor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import NoteEditor.TableEditorUi;
 
@@ -11,13 +12,19 @@ public class MouseListener{
     int startColumn, endColumn;
     Object value;
     boolean flag;
+    ArrayList<HandleMouse> mouseArray = new ArrayList<>();
 
     public MouseListener(TableEditorUi mainTable){
         this.mainTable = mainTable;
 
     }
 
-    public void mouseFunction(){
+    public void add(HandleMouse mouse){
+        mouseArray.add(mouse);
+
+    }
+
+    public void run(){
 
         var noteTable = mainTable.getBaseTable().getNoteTable();
 
@@ -36,8 +43,9 @@ public class MouseListener{
                     value = noteTable.getValueAt(row, startColumn);
                     flag = value.toString().equals("false") ? true : false;
 
-                    mainTable.getAliasLayer().handleMouseClick(noteTable, row, startColumn);
-                    mainTable.getBaseTable().handleMouseClick(noteTable, row, startColumn, flag);
+                    for(HandleMouse mouse : mouseArray){
+                        mouse.handleMouseClick(noteTable, row, startColumn, flag);
+                    }
 
                 
                 }
@@ -47,7 +55,10 @@ public class MouseListener{
         @Override
             public void mouseReleased(MouseEvent e) {
                 endColumn = noteTable.columnAtPoint(e.getPoint());
-                mainTable.getBaseTable().handleMouseDrag(noteTable, startColumn, endColumn, row, flag);
+                
+                for(HandleMouse mouse : mouseArray){
+                    mouse.handleMouseDrag(noteTable, startColumn, endColumn, row, flag);
+                }
 
             }
         });

@@ -2,8 +2,6 @@ package NoteEditor.TableEditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -12,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import NoteEditor.Mediator;
 import NoteEditor.TableEditorUi;
 
-public class NoteTableLayer implements TableLayer{
+public class NoteTableLayer implements TableLayer, HandleMouse{
 
     TableEditorUi mainTable;
     JTable noteTable = new JTable();
@@ -123,7 +121,7 @@ public class NoteTableLayer implements TableLayer{
         update(noteNumber, tickNumber);
 
     }
-
+    
     public void handleMouseClick(JTable noteTable, int row, int startColumn, boolean flag){
 
                 this.noteNumber[row][startColumn] = flag;
