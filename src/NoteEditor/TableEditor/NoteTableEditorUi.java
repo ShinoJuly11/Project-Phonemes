@@ -16,12 +16,9 @@ public class NoteTableEditorUi implements TableEditorUi{
     JLayeredPane layeredPane;
 
     //Layers inside the NoteTableEditor For LayeredPane
-    TableLayer baseTable;
-    PanelLayer AliasLayer;
+    NoteTableLayer baseTable;
+    AliasLabelLayer AliasLayer;
 
-    //MouseActions
-    HandleMouse tableMouse;
-    HandleMouse aliasMouse;
 
     public NoteTableEditorUi(Mediator mediator){
         this.mediator = mediator;
@@ -67,13 +64,13 @@ public class NoteTableEditorUi implements TableEditorUi{
 
         this.baseTable = new NoteTableLayer(this); // creates the base table
         this.AliasLayer = new AliasLabelLayer(this);   //idk if this is the best approach to do SRP oh well
-        this.tableMouse = new NoteTableLayer(this);     //atleast OCP isnt violated inside the mouseListener now
-        this.aliasMouse = new AliasLabelLayer(this);
+                                                        //atleast OCP isnt violated inside the mouseListener now
         
         MouseListener mouseListener = new MouseListener(this);
 
-        mouseListener.add(aliasMouse);
-        mouseListener.add(tableMouse);
+
+        mouseListener.add(AliasLayer);
+        mouseListener.add(baseTable);
         mouseListener.run();
 
         layeredPane.add(baseTable.getNoteTable(), Integer.valueOf(0));
