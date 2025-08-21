@@ -38,5 +38,10 @@ public class EditorMediator implements Mediator {
         return this.table;
     }
 
+    @Override
+    public GlobalFrame getFrame(){
+        return this.frame;
+    }
+
 
 }

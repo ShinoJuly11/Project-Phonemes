@@ -1,3 +1,4 @@
+package ResamplerEngine;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import TarsosDSPCustom.TarsosDSPBufferCollector;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.PitchShifter;

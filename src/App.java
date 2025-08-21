@@ -7,6 +7,9 @@ import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
 import NoteEditor.EditorMediator;
 import NoteEditor.Mediator;
+import ResamplerEngine.AudioPlayback;
+import ResamplerEngine.Phoneme;
+import TarsosDSPCustom.TarsosDSPBufferCollector;
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
@@ -18,13 +21,10 @@ public class App{
         //test_tarsosdsp();
         //test_solaAlgorithm_stretchAudio();
 
-        //test_NoteUi();
+        test_NoteUi();
         //test_sqlite();
 
-        test_NoteEditorUi();
-        //test_TableToClass();
-
-        //test_pianoRollEditor();
+        //test_NoteEditorUi();
 
 
     };

@@ -38,8 +38,8 @@ public class ButtonsForTable implements InterfaceGui{
         midi.getMidiNoteArray(mediator.getTableEditor().getNoteArray());
 
         menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Playback");
-        JMenuItem m1 = new JMenuItem("Midi Playback");
+        JMenu menu = new JMenu("Midi");
+        JMenuItem m1 = new JMenuItem("Playback");
         JMenuItem m2 = new JMenuItem("Save");
         JMenuItem m3 = new JMenuItem("Placeholder");
 

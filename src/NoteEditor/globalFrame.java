@@ -21,13 +21,14 @@ public class GlobalFrame{
 
         this.f = new JFrame();
         this.f.setTitle("Note Editor Ui");
-        this.f.setSize(800,600);
+        this.f.setSize(1200,600);
         this.f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.f.setLayout(new GridBagLayout());
 
         // well i hate my life being this convoluted in ui
 
     }
+
 
     public void addJComponent(JComponent component, GridBagConstraints gbc){
         f.add(component,gbc);

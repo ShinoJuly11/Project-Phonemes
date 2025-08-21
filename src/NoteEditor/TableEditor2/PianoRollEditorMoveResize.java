@@ -62,13 +62,17 @@ public class PianoRollEditorMoveResize implements OverlayGetSetters, tableEditor
     }
 
     public PianoRollEditorMoveResize(Mediator mediator){
-        this();
         this.mediator = mediator;
+        process();
     }
 
 
     public PianoRollEditorMoveResize() {
+        process();
 
+    }
+
+    public void process(){
         model = new DefaultTableModel(60,60);
         table.setGridColor(Color.black);
         table.setShowHorizontalLines(true);
@@ -267,7 +271,9 @@ public class PianoRollEditorMoveResize implements OverlayGetSetters, tableEditor
             }
         });
 
-        scrollPane.setPreferredSize(new Dimension(800,400));
+        int width = this.mediator.getFrame().getJFrame().getWidth()-100;
+        int height = this.mediator.getFrame().getJFrame().getHeight()-100;
 
+        scrollPane.setPreferredSize(new Dimension(width,height));
     }
 }
