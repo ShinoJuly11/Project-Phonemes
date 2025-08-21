@@ -1,64 +1,72 @@
 package NoteEditor.PlaybackButtons;
-
 import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import MidiLogicEngine.MidiConstructor;
+import NoteEditor.InterfaceGui;
 import NoteEditor.Mediator;
 
-public class ButtonsForTable {
+public class ButtonsForTable implements InterfaceGui{
 
     Mediator mediator; 
+    JPanel panel;
+    JMenuBar menuBar;
+    GridBagConstraints constraints;
 
     public ButtonsForTable(Mediator mediator){
         this.mediator = mediator;
+        process();
+    }
+
+    public GridBagConstraints getConstraints(){
+        return this.constraints;
+    }
+
+    public JComponent getMainComponent(){
+        return this.menuBar;
     }
 
     public void process(){
+        MidiConstructor midi = new MidiConstructor(12);
+        midi.getMidiNoteArray(mediator.getTableEditor().getNoteArray());
 
-        JFrame f = mediator.getJFrame();
-        GridBagConstraints constraints = new GridBagConstraints();
+        menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Playback");
+        JMenuItem m1 = new JMenuItem("Midi Playback");
+        JMenuItem m2 = new JMenuItem("Save");
+        JMenuItem m3 = new JMenuItem("Placeholder");
 
-        JPanel panel = new JPanel();
-        JButton button = new JButton("Save to Class");
 
-        button.addActionListener(e -> { 
-            // add something later
-            System.out.println("Table to Class:");
-            mediator.convertTableToClass();
+        menu.add(m1);
+        menu.add(m2);
+        menu.add(m3);
 
+        m1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                midi.playback();
+            }
         });
 
-        JButton button2 = new JButton("Playback");
-
-        button2.addActionListener(e -> { 
-            // add something later
-            mediator.convertTableToClass();
-            MidiConstructor engine = new MidiConstructor(mediator.getTableToClass(), 12);
-            engine.process();
-            engine.playback();
-
+        m2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                midi.saveMidi();
+            }
         });
 
-        JButton button3 = new JButton("Class to Table");
+        menuBar.add(menu);
         
-        button3.addActionListener(e -> { 
-            // add something later
-            System.out.println("To be added soon");
-        });
 
-        constraints.weightx = 4;
-        constraints.weighty = 1;
-        constraints.gridx = 0;
-        constraints.gridy = 1;
+        
 
-        panel.add(button);
-        panel.add(button2);
-        panel.add(button3);
-        f.add(panel,constraints);
         
     }
     

@@ -1,71 +1,41 @@
 package NoteEditor;
-import javax.swing.JFrame;
+import java.awt.GridBagConstraints;
+
+import javax.swing.JMenuBar;
 
 import NoteEditor.PlaybackButtons.ButtonsForTable;
-import NoteEditor.PlaybackButtons.ClassToTable;
-import NoteEditor.PlaybackButtons.TableToClass;
-import NoteEditor.TableEditor.NoteTableEditorUi;
+import NoteEditor.TableEditor2.PianoRollEditorMoveResize;
+import NoteEditor.TableEditor2.tableEditor;
 
 public class EditorMediator implements Mediator {
 
     //istg if this class becomes GOD ill kms
 
-    TableEditorUi a;
-    Controller b;
-    InterfaceGui c;
-    ButtonsForTable d;
-    NoteTableConverter e, f;
+    PianoRollEditorMoveResize table;
+    ButtonsForTable bottomButtons;
+    GlobalFrame frame;
+
 
     public void process(){
-        this.a = new NoteTableEditorUi(this);
-        this.b = new EditorController(this);
-        this.c = new globalFrame(this);
-        this.d = new ButtonsForTable(this);
-        this.e = new TableToClass(this);
-        this.f = new ClassToTable(this);
+        this.frame = new GlobalFrame(this);
+        this.table = new PianoRollEditorMoveResize(this);
+        this.bottomButtons = new ButtonsForTable(this);
 
-        c.process();
-        b.process();
-        getAll();
-        a.process();
-        d.process();
-        c.setVisible();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
 
-    }
+        frame.addJComponent(table.getMainComponent(), gbc);
+        frame.setMenuBar((JMenuBar) bottomButtons.getMainComponent()); //This is wack
 
-    public void getAll(){
-        a.setNoteNumber(b.getNoteNumber());
-        a.setTickNumber(b.getTickNumber());
-    }
-
-    public void convertTableToClass(){
-        this.e.setNoteNumber(b.getNoteNumber());
-        this.e.process();
-        
-    }
-
-    public void TableUpdate(){
-        b.update(a.getNoteNumber());
-        getAll();
-        a.update(b.getNoteNumber(), b.getTickNumber());
+        frame.setVisible();
 
     }
 
-    public JFrame getJFrame(){
-        return c.getJFrame(); 
 
-    }
-
-    public NoteTableConverter getTableToClass(){
-        return this.e;
-
-    }
-
-    public TableEditorUi getTableEditor(){
-        return this.a;
-    }
-    public Controller getController(){
-        return this.b;
+    @Override
+    public tableEditor getTableEditor() {
+        return this.table;
     }
 
 

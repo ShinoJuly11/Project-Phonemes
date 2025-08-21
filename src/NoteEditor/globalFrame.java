@@ -1,15 +1,20 @@
 package NoteEditor;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import javax.swing.JFrame;
 
-public class globalFrame implements InterfaceGui {
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+
+public class GlobalFrame{
 
     Mediator mediator;
     JFrame f;
 
-    public globalFrame(Mediator mediator){
+    public GlobalFrame(Mediator mediator){
         this.mediator = mediator;
+        process();
     }
 
     public void process(){
@@ -22,6 +27,15 @@ public class globalFrame implements InterfaceGui {
 
         // well i hate my life being this convoluted in ui
 
+    }
+
+    public void addJComponent(JComponent component, GridBagConstraints gbc){
+        f.add(component,gbc);
+        
+    }
+
+    public void setMenuBar(JMenuBar menu){
+        f.setJMenuBar(menu);
     }
 
     public JFrame getJFrame(){

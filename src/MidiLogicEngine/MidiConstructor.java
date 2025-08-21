@@ -11,23 +11,20 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
-import NoteEditor.MidiNote;
-import NoteEditor.NoteTableConverter;
+import NoteEditor.TableEditor2.Note;
 
 public class MidiConstructor {
 
-    ArrayList<MidiNote> midiNoteArray;
+    ArrayList<Note> midiNoteArray;
     Sequence sequence;
     Track track;
-    NoteTableConverter midiArray;
 
-    public void getMidiNoteArray(ArrayList<MidiNote> m){
+    public void getMidiNoteArray(ArrayList<Note> m){
         this.midiNoteArray = m;
     }
 
-    public MidiConstructor(NoteTableConverter midiArray, int resolution){
+    public MidiConstructor(int resolution){
         try{
-            midiNoteArray = midiArray.getMidiNoteArray();
             sequence = new Sequence(Sequence.PPQ, resolution);
             track = sequence.createTrack();
         }
@@ -38,7 +35,7 @@ public class MidiConstructor {
 
     public void process(){
         try{
-            for (MidiNote note: midiNoteArray){
+            for (Note note: midiNoteArray){
             addNote(note.getRow(),note.getStart(),note.getEnd());
         }
 
@@ -71,6 +68,7 @@ public class MidiConstructor {
 
     public void saveMidi(){
         try{
+            process();
             MidiSystem.write(sequence, 1, new File("sound/output.mid"));
         }
         catch(IOException e){
@@ -82,6 +80,7 @@ public class MidiConstructor {
     public void playback(){
         
         try{
+            process();
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
             sequencer.setSequence(sequence);

@@ -1,10 +1,9 @@
 package NoteEditor;
-import javax.swing.JFrame;
+
+import javax.swing.JComponent;
 
 public interface InterfaceGui {
 
-    public void process();
-    public JFrame getJFrame();
-    public void setVisible();
+    public JComponent getMainComponent();
 
 }
