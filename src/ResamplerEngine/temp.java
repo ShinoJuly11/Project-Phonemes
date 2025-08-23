@@ -16,7 +16,7 @@ import be.tarsos.dsp.PitchShifter;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 
 
-public class AudioPlayback{
+public class temp{
 
     /**
      * Extracts and returns a subrange of frames from the provided AudioInputStream,
@@ -54,23 +54,23 @@ public class AudioPlayback{
 
     }
 
-    private AudioInputStream baisToAis(Phoneme phoneme, byte[] byteStream, int numFrames) throws IOException{
+    private AudioInputStream baisToAis(AudioFormat audioFormat, byte[] byteStream, int numFrames) throws IOException{
         ByteArrayInputStream bais = new ByteArrayInputStream(byteStream);
-        AudioInputStream ais = new AudioInputStream(bais, phoneme.getAis().getFormat(), numFrames);
+        AudioInputStream ais = new AudioInputStream(bais, audioFormat, numFrames);
         return ais;
     }
 
 
-
+    @Deprecated
     public void playback(Phoneme phoneme, byte[] byteStream, int numFrames) throws Exception{
-        AudioInputStream ais = baisToAis(phoneme, byteStream, numFrames);
+        AudioInputStream ais = baisToAis(phoneme.getAis().getFormat(), byteStream, numFrames);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, ais.getFormat());
         SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info);
 
         line.open(ais.getFormat());
         line.start();
 
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[1024];
         int bytesRead;
 
             while ((bytesRead = ais.read(buffer, 0, buffer.length)) != -1) {
@@ -80,6 +80,7 @@ public class AudioPlayback{
         line.drain();
         line.close();
     }
+
         
 
     /**

@@ -1,5 +1,8 @@
 import javax.swing.*; // UI implementation
 
+import ResamplerEngine.temp;
+import ResamplerEngine.Phoneme;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -575,7 +578,7 @@ public class NoteUi{
 
     class PlaybackPanel extends JPanel{
 
-        AudioPlayback aProcessor = new AudioPlayback();
+        temp aProcessor = new temp();
 
 
         //Creates a button when uh to playback audioLoop

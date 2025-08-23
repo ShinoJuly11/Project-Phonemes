@@ -7,7 +7,7 @@ import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
 import NoteEditor.EditorMediator;
 import NoteEditor.Mediator;
-import ResamplerEngine.AudioPlayback;
+import ResamplerEngine.temp;
 import ResamplerEngine.Phoneme;
 import TarsosDSPCustom.TarsosDSPBufferCollector;
 import be.tarsos.dsp.AudioDispatcher;
@@ -21,10 +21,10 @@ public class App{
         //test_tarsosdsp();
         //test_solaAlgorithm_stretchAudio();
 
-        test_NoteUi();
+        //test_NoteUi();
         //test_sqlite();
 
-        //test_NoteEditorUi();
+        test_NoteEditorUi();
 
 
     };
@@ -181,7 +181,7 @@ public class App{
 
         AudioInputStream ais1 = AudioSystem.getAudioInputStream(file1);
 
-        AudioPlayback ap = new AudioPlayback();
+        temp ap = new temp();
         //sola.playback(sola.wavToChunks(sound1 , 0.1f));
         AudioInputStream ais3 = ap.stretchAudio(ais1, 3);
 
