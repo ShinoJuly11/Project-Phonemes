@@ -5,18 +5,22 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import NoteEditor.TableEditor2.Note;
 import TarsosDSPCustom.TarsosDSPBufferCollector;
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.AudioProcessor;
 
+
+/** uncessesary abstract class for the lolz */
 public abstract class TarsosDSPProcessors implements AudioProcess{
 
     int bufferSize = 1024;
     int overlap = 768;
+
+    Note note;
+    AudioFormat audioFormat;
     ArrayList<AudioProcessor> processorArray = new ArrayList<>();
-    AudioDispatcher dispatcher;
-    TarsosDSPBufferCollector bufferCollector;
     
     public byte[] processedByteStream;
 
@@ -25,19 +29,22 @@ public abstract class TarsosDSPProcessors implements AudioProcess{
     }
 
 
-    public TarsosDSPProcessors(byte[] byteArray, AudioFormat audioFormat) throws UnsupportedAudioFileException{
-        dispatcher = AudioDispatcherFactory.fromByteArray(byteArray, audioFormat, bufferSize, overlap);
-        bufferCollector = new TarsosDSPBufferCollector(audioFormat.isBigEndian(), overlap);
-        
+    public TarsosDSPProcessors(Note note, AudioFormat audioFormat) throws UnsupportedAudioFileException{
+        this.note = note;
+        this.audioFormat = audioFormat;
     }
 
-    public void add(){
-        //processorArray.add(process);
+    public void addProcessors(){
     }
+
 
     @Override
-    public byte[] run(byte[] bytestream){
+    public byte[] run(byte[] bytestream) throws UnsupportedAudioFileException{
 
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromByteArray(note.getPhoneme().getByteStream(), audioFormat, bufferSize, overlap);
+        TarsosDSPBufferCollector bufferCollector = new TarsosDSPBufferCollector(audioFormat.isBigEndian(), overlap);
+        
+        addProcessors();
         for (AudioProcessor process : processorArray){
             dispatcher.addAudioProcessor(process);
         }
@@ -46,7 +53,7 @@ public abstract class TarsosDSPProcessors implements AudioProcess{
         dispatcher.run();
         processedByteStream = bufferCollector.getBytes();
         
-        return bytestream;
+        return processedByteStream;
 
     }
     
