@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import MidiLogicEngine.MidiConstructor;
 import NoteEditor.InterfaceGui;
 import NoteEditor.Mediator;
+import ResamplerEngine.Resampler;
 
 public class ButtonsForTable implements InterfaceGui{
 
@@ -19,6 +20,7 @@ public class ButtonsForTable implements InterfaceGui{
     JPanel panel;
     JMenuBar menuBar;
     GridBagConstraints constraints;
+    Resampler resampler = new Resampler();
 
     public ButtonsForTable(Mediator mediator){
         this.mediator = mediator;
@@ -63,6 +65,47 @@ public class ButtonsForTable implements InterfaceGui{
         });
 
         menuBar.add(menu);
+
+        JMenu menu2 = new JMenu("Test Resampler");
+        JMenuItem m4 = new JMenuItem("Process");
+        JMenuItem m5 = new JMenuItem("Playback");
+        JMenuItem m6 = new JMenuItem("Placeholder");
+
+        menu2.add(m4);
+        menu2.add(m5);
+        menu2.add(m6);
+
+        m4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                // Resampler resampler = new Resampler();
+                try{
+                    resampler.process(mediator.getTableEditor().getNoteArray());
+                    System.out.println(mediator.getTableEditor().getNoteArray().size());
+                    System.out.println("resampler process complete!");
+                }
+                catch(Exception e2){
+                    System.err.println(e2);
+                }
+            }
+        });
+
+        m5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                // Resampler resampler = new Resampler();
+                try{
+                    resampler.playback();
+                    resampler.save();
+                }
+                catch(Exception e2){
+                    System.err.println(e2);
+                }
+            }
+        });
+
+        menuBar.add(menu2);
+
         
 
         

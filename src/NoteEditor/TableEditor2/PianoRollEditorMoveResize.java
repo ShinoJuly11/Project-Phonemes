@@ -216,9 +216,15 @@ public class PianoRollEditorMoveResize implements OverlayGetSetters, tableEditor
 
                 // otherwise, create a new note
                 if (row >= 0 && col >= 0) {
-                    Note newNote = new Note(row, col, 4);
-                    notes.add(newNote);
-                    overlay.repaint();
+                    Note newNote;
+                    try {
+                        newNote = new Note(row, col, 4);
+                        notes.add(newNote);
+                        overlay.repaint();
+                    } catch (Exception e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
                 }
             }
 

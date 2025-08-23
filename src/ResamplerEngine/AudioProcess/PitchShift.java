@@ -13,10 +13,12 @@ public class PitchShift implements AudioProcess {
 
     Note note;
     float pitch;
+    AudioFormat audioFormat;
     
     /** for the pitch */
-    public PitchShift(Note note){
+    public PitchShift(Note note, AudioFormat audioFormat){
         this.note = note;
+        this.audioFormat = audioFormat;
         this.pitch = (float) note.getRow() / 10;
     }
 
@@ -24,35 +26,27 @@ public class PitchShift implements AudioProcess {
     public byte[] run(byte[] byteStream) throws Exception{
 
         try{
-            return pitchShift(byteStream, pitch);
+            int bufferSize = 1024;
+            int overlap = 768;
+            float pitchFactor = pitch;
+
+            AudioDispatcher dispatcher = AudioDispatcherFactory.fromByteArray(byteStream, audioFormat, bufferSize, overlap);
+            TarsosDSPBufferCollector collector = new TarsosDSPBufferCollector(audioFormat.isBigEndian(),overlap);
+            PitchShifter pShifter = new PitchShifter(pitchFactor, audioFormat.getSampleRate(), bufferSize, overlap);
+
+            dispatcher.addAudioProcessor(pShifter);
+            dispatcher.addAudioProcessor(collector);
+            dispatcher.run();
+
+            byte[] processedBytes = collector.getBytes();
+            return processedBytes;
 
         }catch(UnsupportedAudioFileException e){
 
-            System.err.println(e);
+            e.printStackTrace();
 
         }
         return null;
-    }
-
-    public byte[] pitchShift(byte[] byteArray, float pitchFactor) throws UnsupportedAudioFileException{
-
-        int bufferSize = 1024;
-        int overlap = 768;
-        AudioFormat format = note.getPhoneme().getAis().getFormat();
-
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromByteArray(byteArray, format, bufferSize, overlap);
-        TarsosDSPBufferCollector collector = new TarsosDSPBufferCollector(format.isBigEndian(),overlap);
-        PitchShifter pShifter = new PitchShifter(pitchFactor, format.getSampleRate(), bufferSize, overlap);
-
-        //dispatcher.addAudioProcessor(new PitchShifter(1.2f,format.getSampleRate(),bufferSize,overlap));
-        //dispatcher.addAudioProcessor(new TarsosDSPPitchBend(3, 3, bufferCount, 48000, bufferSize, overlap));
-
-        dispatcher.addAudioProcessor(pShifter);
-        dispatcher.addAudioProcessor(collector);
-        dispatcher.run();
-
-        byte[] processedBytes = collector.getBytes();
-        return processedBytes;
 
     }
     

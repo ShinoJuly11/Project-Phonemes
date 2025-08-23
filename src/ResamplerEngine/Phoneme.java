@@ -135,8 +135,7 @@ public class Phoneme{
     // methods
 
     private byte[] AISToByte(AudioInputStream ais) throws Exception{
-            int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
+            byte[] buffer = new byte[4096];
             int byteRead;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
