@@ -7,6 +7,7 @@ import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
 import NoteEditor.EditorMediator;
 import NoteEditor.Mediator;
+import Phonemizer.SentenceTokenizer;
 import ResamplerEngine.temp;
 import ResamplerEngine.Phoneme;
 import TarsosDSPCustom.TarsosDSPBufferCollector;
@@ -25,6 +26,8 @@ public class App{
         //test_sqlite();
 
         test_NoteEditorUi();
+
+        //test_SentenceTokenizer();
 
 
     };

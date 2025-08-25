@@ -81,8 +81,8 @@ public class ButtonsForTable implements InterfaceGui{
                 // Resampler resampler = new Resampler();
                 try{
                     resampler.process(mediator.getTableEditor().getNoteArray());
-                    System.out.println(mediator.getTableEditor().getNoteArray().size());
-                    System.out.println("resampler process complete!");
+                    //System.out.println(mediator.getTableEditor().getNoteArray().size());
+                    //System.out.println("resampler process complete!");
                 }
                 catch(Exception e2){
                     System.err.println(e2);

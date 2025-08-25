@@ -28,15 +28,12 @@ public abstract class TarsosDSPProcessors implements AudioProcess{
         return this.processedByteStream;
     }
 
-
     public TarsosDSPProcessors(Note note, AudioFormat audioFormat) throws UnsupportedAudioFileException{
         this.note = note;
         this.audioFormat = audioFormat;
     }
 
-    public void addProcessors(){
-    }
-
+    public abstract void addProcessors();
 
     @Override
     public byte[] run(byte[] bytestream) throws UnsupportedAudioFileException{

@@ -25,7 +25,7 @@ public class AudioResampler {
     public void process() throws Exception{
         for (AudioProcess process: audioProcesses){
             this.byteStream = process.run(this.byteStream);
-            System.out.println("bytestream length = " + this.byteStream.length);
+            //System.out.println("bytestream length = " + this.byteStream.length);
         }
     }
 

@@ -7,7 +7,6 @@ import javax.sound.sampled.AudioFormat;
 
 import NoteEditor.TableEditor2.Note;
 import ResamplerEngine.AudioProcess.PitchShift;
-import ResamplerEngine.AudioProcess.PitchShift;
 import ResamplerEngine.AudioProcess.Play;
 
 public class Resampler {
@@ -28,7 +27,7 @@ public class Resampler {
             resampler.process();
             byte[] byteStream = resampler.getByteStream();
             baos.write(byteStream);
-            System.out.println("processed length = " + baos.size());
+            //System.out.println("processed length = " + baos.size());
 
         }
 
