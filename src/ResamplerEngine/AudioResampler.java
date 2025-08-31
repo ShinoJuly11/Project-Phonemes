@@ -2,6 +2,8 @@ package ResamplerEngine;
 
 import java.util.ArrayList;
 
+import javax.sound.sampled.AudioFormat;
+
 import NoteEditor.TableEditor2.Note;
 import ResamplerEngine.AudioProcess.AudioProcess;
 
@@ -9,13 +11,24 @@ public class AudioResampler {
 
     ArrayList<AudioProcess> audioProcesses = new ArrayList<>();
     byte[] byteStream;
+    AudioFormat audioFormat; 
+    Note note;
+    
 
-    public AudioResampler(Note note){
+    public AudioResampler(Note note, AudioFormat aFormat){
         this.byteStream = note.getPhoneme().getByteStream();
+        this.audioFormat = aFormat;
+        this.note = note;
+
     }
 
     public void add(AudioProcess ap){
         audioProcesses.add(ap);
+
+        for (AudioProcess process: audioProcesses){
+            process.addNote(this.note);
+            process.addAudioFormat(this.audioFormat);
+        }
     }
 
     public byte[] getByteStream(){
@@ -23,10 +36,14 @@ public class AudioResampler {
     }
 
     public void process() throws Exception{
-        for (AudioProcess process: audioProcesses){
-            this.byteStream = process.run(this.byteStream);
-            //System.out.println("bytestream length = " + this.byteStream.length);
+        byte[] tempStream = this.byteStream;
+
+        for (AudioProcess process : audioProcesses) {
+            tempStream = process.run(tempStream);
+            System.out.println("bytestream length = " + tempStream.length);
         }
+        
+        this.byteStream = tempStream;
     }
 
 

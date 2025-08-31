@@ -20,10 +20,13 @@ public class ButtonsForTable implements InterfaceGui{
     JPanel panel;
     JMenuBar menuBar;
     GridBagConstraints constraints;
-    Resampler resampler = new Resampler();
+    Resampler resampler;
+    MidiConstructor midi;
 
     public ButtonsForTable(Mediator mediator){
         this.mediator = mediator;
+        this.resampler = mediator.getResampler();
+        this.midi = mediator.getMidiConstructor();
         process();
     }
 
@@ -36,7 +39,6 @@ public class ButtonsForTable implements InterfaceGui{
     }
 
     public void process(){
-        MidiConstructor midi = new MidiConstructor(12);
         midi.getMidiNoteArray(mediator.getTableEditor().getNoteArray());
 
         menuBar = new JMenuBar();

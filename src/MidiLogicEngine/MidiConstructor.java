@@ -13,7 +13,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 import NoteEditor.TableEditor2.Note;
 
-public class MidiConstructor {
+public class MidiConstructor{
 
     ArrayList<Note> midiNoteArray;
     Sequence sequence;
@@ -21,6 +21,10 @@ public class MidiConstructor {
 
     public void getMidiNoteArray(ArrayList<Note> m){
         this.midiNoteArray = m;
+    }
+
+    public Sequence getSequence(){
+        return this.sequence;
     }
 
     public MidiConstructor(int resolution){
@@ -36,7 +40,7 @@ public class MidiConstructor {
     public void process(){
         try{
             for (Note note: midiNoteArray){
-            addNote(note.getRow(),note.getStart(),note.getEnd());
+            addNote(note.getRow(),note.getStart(),note.getNoteLength());
         }
 
         }

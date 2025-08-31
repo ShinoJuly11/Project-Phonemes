@@ -64,6 +64,18 @@ public class Play implements AudioProcess{
 
     }
 
+    @Override
+    public void addNote(Note note) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addNote'");
+    }
+
+    @Override
+    public void addAudioFormat(AudioFormat audioFormat) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addAudioFormat'");
+    }
+
     
     
 }

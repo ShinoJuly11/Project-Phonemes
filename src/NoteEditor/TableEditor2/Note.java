@@ -9,6 +9,7 @@ public class Note {
         int row;
         int start;
         int length;
+        int end;
         String alias;
         Phoneme phoneme;
 
@@ -16,8 +17,12 @@ public class Note {
             this.row = row;
             this.start = start;
             this.length = length;
-            this.phoneme = new Phoneme("sound/hello.wav",0,0,0,0,0);
+            this.phoneme = new Phoneme("sound/hello.wav",0,0,30000,40000,0);
             alias = "null";
+        }
+
+        public void setEnd(int e){
+            this.end = e;
         }
 
         public void setPhoneme(Phoneme p){
@@ -48,7 +53,7 @@ public class Note {
             return this.start;
         }
 
-        public int getEnd(){
+        public int getNoteLength(){
             return this.length + this.start - 1;
 
         }

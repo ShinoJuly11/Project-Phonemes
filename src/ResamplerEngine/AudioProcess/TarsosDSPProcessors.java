@@ -21,16 +21,10 @@ public abstract class TarsosDSPProcessors implements AudioProcess{
     Note note;
     AudioFormat audioFormat;
     ArrayList<AudioProcessor> processorArray = new ArrayList<>();
-    
     public byte[] processedByteStream;
 
     public byte[] getProcessedByteStream(){
         return this.processedByteStream;
-    }
-
-    public TarsosDSPProcessors(Note note, AudioFormat audioFormat) throws UnsupportedAudioFileException{
-        this.note = note;
-        this.audioFormat = audioFormat;
     }
 
     public abstract void addProcessors();
@@ -38,7 +32,7 @@ public abstract class TarsosDSPProcessors implements AudioProcess{
     @Override
     public byte[] run(byte[] bytestream) throws UnsupportedAudioFileException{
 
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromByteArray(note.getPhoneme().getByteStream(), audioFormat, bufferSize, overlap);
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromByteArray(bytestream, audioFormat, bufferSize, overlap);
         TarsosDSPBufferCollector bufferCollector = new TarsosDSPBufferCollector(audioFormat.isBigEndian(), overlap);
         
         addProcessors();
@@ -52,6 +46,16 @@ public abstract class TarsosDSPProcessors implements AudioProcess{
         
         return processedByteStream;
 
+    }
+
+    @Override
+    public void addNote(Note note) {
+        this.note = note;
+    }
+
+    @Override
+    public void addAudioFormat(AudioFormat audioFormat) {
+        this.audioFormat = audioFormat;
     }
     
     
