@@ -19,10 +19,14 @@ public class AudioLoop implements AudioProcess {
         int frameLength = byteStream.length / audioFormat.getFrameSize();
         int bpm = 120; //PLEASE GET RID OF THIS SOON
         long targetFrameLength = desiredLengthCalculator(audioFormat, note.getNoteLength(), frameLength , bpm, ticksPerBeat);
-        byte[] processedBytes = process(byteStream, note.getPhoneme(), targetFrameLength);
+        if (targetFrameLength != frameLength){
+            byte[] processedBytes = process(byteStream, note.getPhoneme(), targetFrameLength);
+            return processedBytes;
+        }
+        else{
+            return byteStream;
 
-        return processedBytes;
-
+        }
         //wtf am i doing;
         
     }
@@ -51,7 +55,6 @@ public class AudioLoop implements AudioProcess {
 
     byte[] loopedByteStream = getAudioLoopByteStream(byteStream, audioLoopStart, audioLoopEnd, frameSize);
     long calcResultLength = getNumLoops(byteStream, loopedByteStream, desiredLength, frameSize);
-
     byte[] resultedLoop = concatLoops(phoneme, byteStream, loopedByteStream, calcResultLength);
     
     System.out.println("looped bytestream =" + loopedByteStream.length);
