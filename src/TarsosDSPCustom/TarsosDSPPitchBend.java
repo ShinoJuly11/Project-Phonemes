@@ -19,6 +19,9 @@ public class TarsosDSPPitchBend extends PitchShifter {
     public boolean process(AudioEvent audioEvent){
 
         // add some convoulted A-level graph maths in here so i can have good pitch factor
+
+        // wojak moment here imma kms
+
         double increment = (endFactor - pitchFactor) / bufferCount;
         this.pitchFactor += increment;
         if ((increment > 0 && this.pitchFactor > endFactor) || (increment < 0 && this.pitchFactor < endFactor)) {

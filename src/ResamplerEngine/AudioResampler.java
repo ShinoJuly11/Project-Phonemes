@@ -23,12 +23,10 @@ public class AudioResampler {
     }
 
     public void add(AudioProcess ap){
+        ap.addNote(this.note);
+        ap.addAudioFormat(this.audioFormat);
         audioProcesses.add(ap);
 
-        for (AudioProcess process: audioProcesses){
-            process.addNote(this.note);
-            process.addAudioFormat(this.audioFormat);
-        }
     }
 
     public byte[] getByteStream(){
@@ -42,7 +40,7 @@ public class AudioResampler {
             tempStream = process.run(tempStream);
             System.out.println("bytestream length = " + tempStream.length);
         }
-        
+
         this.byteStream = tempStream;
     }
 

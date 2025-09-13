@@ -28,16 +28,20 @@ public class AudioFade implements AudioProcess {
 
             for (int x = 0; x < totalFrames; x++){
 
-                float fadeFactor = (float)(x) / fadeFrames; // 0 -> 1
+                float fadeFactor = (float) x / fadeFrames; // 0 -> 1
 
                 int byteIndex = x * frameSize;
                 short sample = (short) ((audioBytes[byteIndex+1] << 8) | (audioBytes[byteIndex] & 0xff));
 
                 sample = (short) (sample * fadeFactor);
 
+                // clamping?
+                sample = (short) Math.max(Math.min(sample, Short.MAX_VALUE), Short.MIN_VALUE);
+
                 // Write back
                 audioBytes[byteIndex] = (byte) (sample & 0xff);
                 audioBytes[byteIndex + 1] = (byte) ((sample >> 8) & 0xff);
+
 
             }
 
@@ -54,13 +58,15 @@ public class AudioFade implements AudioProcess {
 
         if (startFrame < 0) startFrame = 0;
 
-        for (int x = startFrame; x < totalFrames; x++){
+        for (int x = startFrame; (float) x < totalFrames; x++){
 
             float fadeFactor = 1.0f - ((float)(x - startFrame) / fadeFrames); // 1 -> 0
 
             int byteIndex = x * frameSize;
             short sample = (short) ((audioBytes[byteIndex+1] << 8) | (audioBytes[byteIndex] & 0xff));
+
             sample = (short) (sample * fadeFactor);
+            sample = (short) Math.max(Math.min(sample, Short.MAX_VALUE), Short.MIN_VALUE);
 
             // Write back
             audioBytes[byteIndex] = (byte) (sample & 0xff);

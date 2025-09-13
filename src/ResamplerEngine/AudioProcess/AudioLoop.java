@@ -18,7 +18,7 @@ public class AudioLoop implements AudioProcess {
     public byte[] run(byte[] byteStream) throws Exception {
         int frameLength = byteStream.length / audioFormat.getFrameSize();
         int bpm = 120; //PLEASE GET RID OF THIS SOON
-        long targetFrameLength = desiredLengthCalculator(audioFormat, note.getNoteLength(), frameLength , bpm, ticksPerBeat);
+        long targetFrameLength = desiredLengthCalculator(audioFormat, note.getLength(), frameLength , bpm, ticksPerBeat);
         if (targetFrameLength != frameLength){
             byte[] processedBytes = process(byteStream, note.getPhoneme(), targetFrameLength);
             return processedBytes;
@@ -38,9 +38,10 @@ public class AudioLoop implements AudioProcess {
         // long frameMicroSeconds = (long) Math.abs(frameLength / af.getSampleRate());
         //i never used a balancing equation since A-levels
 
-        float desiredFrameLength =  Math.abs(((tickLength * tickDuration) / 1_000_000) * af.getSampleRate()) / audioFormat.getFrameSize();
+        float desiredFrameLength =  Math.abs(((tickLength * tickDuration) / 1_000_000) * af.getSampleRate());
         System.out.println("resultedLoop =" + desiredFrameLength);
         
+
         return (long) desiredFrameLength + frameLength;
         
         //get the desiredLength from the note

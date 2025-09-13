@@ -17,8 +17,23 @@ public class Note {
             this.row = row;
             this.start = start;
             this.length = length;
-            this.phoneme = new Phoneme("sound/hello.wav",0,0,30000,40000,0);
+            this.phoneme = new Phoneme("sound/hello.wav",10000,50000,30000,40000,50000);
             alias = "null";
+        }
+
+        public Note clone() {
+            Note newNote;
+            try {
+                newNote = new Note(this.row, this.start, this.length);
+                newNote.setPhoneme(this.phoneme);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return null;
+            }
+            return newNote;
+
+            
         }
 
         public void setEnd(int e){
@@ -53,10 +68,6 @@ public class Note {
             return this.start;
         }
 
-        public int getNoteLength(){
-            return this.length + this.start - 1;
-
-        }
 
         public Rectangle getBounds(JTable table) {
             Rectangle startRect = table.getCellRect(row, start, true);

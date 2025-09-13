@@ -2,6 +2,7 @@ package NoteEditor.PlaybackButtons;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JMenu;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import MidiLogicEngine.MidiConstructor;
 import NoteEditor.InterfaceGui;
 import NoteEditor.Mediator;
+import NoteEditor.TableEditor2.Note;
 import ResamplerEngine.Resampler;
 
 public class ButtonsForTable implements InterfaceGui{
@@ -82,7 +84,15 @@ public class ButtonsForTable implements InterfaceGui{
             public void actionPerformed(ActionEvent e){
                 // Resampler resampler = new Resampler();
                 try{
-                    resampler.process(mediator.getTableEditor().getNoteArray());
+                    ArrayList<Note> notes = new ArrayList<>();
+                    for (Note note : mediator.getTableEditor().getNoteArray()){
+                        if (note instanceof Note){
+                            notes.add(note.clone());
+                        }
+                        //This is wack so i can get rid of the references
+                    }
+                    resampler.process(notes);
+
                     //System.out.println(mediator.getTableEditor().getNoteArray().size());
                     //System.out.println("resampler process complete!");
                 }

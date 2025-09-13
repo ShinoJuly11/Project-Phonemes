@@ -40,7 +40,7 @@ public class MidiConstructor{
     public void process(){
         try{
             for (Note note: midiNoteArray){
-            addNote(note.getRow(),note.getStart(),note.getNoteLength());
+            addNote(note.getRow(),note.getStart(),note.getLength());
         }
 
         }
