@@ -8,20 +8,22 @@ public class AudioFade implements AudioProcess {
     int duration;
     Note note;
     AudioFormat aFormat;
+    
 
     public enum FadeType{
         FADE_IN,
         FADE_OUT
     }
 
-    public AudioFade(FadeType fadeType, int fadeFrameLength){
+    public AudioFade(FadeType fadeType){
         this.fadeType = fadeType;
-        this.duration = fadeFrameLength;
         
     }
 
-    private byte[] fadeInAudio(byte[] byteStream, int fadeFrames) throws Exception{
+    private byte[] fadeInAudio(byte[] byteStream) throws Exception{
 
+            
+            int fadeFrames = note.getPhoneme().getOverlap();
             byte[] audioBytes = byteStream;
             int frameSize = aFormat.getFrameSize();
             int totalFrames = byteStream.length / aFormat.getFrameSize();
@@ -49,8 +51,10 @@ public class AudioFade implements AudioProcess {
 
     }
 
-    private byte[] fadeOutAudio(byte[] byteStream, int fadeFrames) throws Exception{
+    private byte[] fadeOutAudio(byte[] byteStream) throws Exception{
 
+        
+        int fadeFrames = note.getPhoneme().getOverlap();
         byte[] audioBytes = byteStream;
         int frameSize = aFormat.getFrameSize();
         int totalFrames = byteStream.length / aFormat.getFrameSize();
@@ -82,9 +86,9 @@ public class AudioFade implements AudioProcess {
 
         switch (fadeType) {
             case FADE_IN:
-                return fadeInAudio(byteStream, duration);
+                return fadeInAudio(byteStream);
             case FADE_OUT:
-                return fadeOutAudio(byteStream, duration);
+                return fadeOutAudio(byteStream);
             default:
                 System.out.println("AudioFade has no enum check arguements");
                 return byteStream;
