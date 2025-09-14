@@ -201,7 +201,6 @@ public class NoteDictionaryUi {
         f.add(crud, c);
 
         f.setSize(720,480);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
 
 

@@ -124,11 +124,11 @@ public class ButtonsForTable implements InterfaceGui{
         JMenuItem m8 = new JMenuItem("Placeholder");
         JMenuItem m9 = new JMenuItem("Placeholder");
 
-        menu2.add(m7);
-        menu2.add(m8);
-        menu2.add(m9);
+        menu3.add(m7);
+        menu3.add(m8);
+        menu3.add(m9);
 
-        m4.addActionListener(new ActionListener() {
+        m7.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 // Resampler resampler = new Resampler();
@@ -142,21 +142,7 @@ public class ButtonsForTable implements InterfaceGui{
             }
         });
 
-        m5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                // Resampler resampler = new Resampler();
-                try{
-                    resampler.playback();
-                    resampler.save();
-                }
-                catch(Exception e2){
-                    System.err.println(e2);
-                }
-            }
-        });
-
-        menuBar.add(menu2);
+        menuBar.add(menu3);
 
         
 

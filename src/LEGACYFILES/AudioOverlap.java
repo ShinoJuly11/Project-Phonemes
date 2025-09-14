@@ -1,4 +1,4 @@
-package ResamplerEngine;
+package LEGACYFILES;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

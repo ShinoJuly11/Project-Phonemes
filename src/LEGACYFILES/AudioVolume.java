@@ -1,5 +1,7 @@
-package ResamplerEngine;
+package LEGACYFILES;
 import javax.sound.sampled.AudioInputStream;
+
+import ResamplerEngine.Phoneme;
 
     /**
      * 

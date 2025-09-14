@@ -27,9 +27,9 @@ public class App{
         //test_solaAlgorithm_stretchAudio();
 
         //test_NoteUi();
-        test_sqlite();
+        //test_sqlite();
 
-        //test_NoteEditorUi();
+        test_NoteEditorUi();
 
         //test_SentenceTokenizer();
 
