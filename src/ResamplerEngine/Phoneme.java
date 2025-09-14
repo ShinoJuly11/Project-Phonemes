@@ -21,7 +21,7 @@ public class Phoneme{
     /**
      * offset
      * 
-     * Plays the phoneme note early.
+     * Plays the phoneme note early. (cuts the silence at the beginning)
      * 
      */
     private int offset;
@@ -50,7 +50,7 @@ public class Phoneme{
     /**
      * Cutoff
      * 
-     * End of the phoneme note
+     * end of the sound in vowel (to hide silence)
      * 
      */
     private int cutoff;

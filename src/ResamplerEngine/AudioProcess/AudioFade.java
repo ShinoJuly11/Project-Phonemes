@@ -26,7 +26,7 @@ public class AudioFade implements AudioProcess {
             int fadeFrames = note.getPhoneme().getOverlap();
             byte[] audioBytes = byteStream;
             int frameSize = aFormat.getFrameSize();
-            int totalFrames = byteStream.length / aFormat.getFrameSize();
+            int totalFrames = audioBytes.length / aFormat.getFrameSize();
 
             for (int x = 0; x < totalFrames; x++){
 
@@ -57,7 +57,7 @@ public class AudioFade implements AudioProcess {
         int fadeFrames = note.getPhoneme().getOverlap();
         byte[] audioBytes = byteStream;
         int frameSize = aFormat.getFrameSize();
-        int totalFrames = byteStream.length / aFormat.getFrameSize();
+        int totalFrames = audioBytes.length / aFormat.getFrameSize();
         int startFrame = totalFrames - fadeFrames;
 
         if (startFrame < 0) startFrame = 0;
