@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableModel;
 
 import ResamplerEngine.Phoneme;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class NoteDictionaryUi {
 
@@ -24,26 +24,6 @@ public class NoteDictionaryUi {
     String selected = "";
     JTable j = new JTable();
     Database sql = new Database();
-
-    private class MouseListener extends MouseAdapter{
-
-        JTable table;
-
-        public MouseListener(JTable table){
-            this.table = table;
-        }
-
-        public void mouseClicked(MouseEvent e){
-            int row = this.table.rowAtPoint(e.getPoint());
-            int column = this.table.columnAtPoint(e.getPoint());
-
-            if (row != 0 && column != 0){
-                Object value = this.table.getValueAt(row, column);
-                System.out.println(value);
-            }
-        }
-
-    }
 
     private class CRUDPanel extends JPanel{
 
@@ -172,15 +152,14 @@ public class NoteDictionaryUi {
 
         var f = new JFrame();
         f.setTitle("Note Dictionary Ui");
-        f.setLayout(new GridLayout(1,2));
+        f.setLayout(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
 
         var crud = new CRUDPanel();
-        crud.setSize(400,300);
 
         var newModel = new DefaultTableModel(data,columnNames);
         j.setModel(newModel);
-        j.setBounds(30,40,200,300);
-
         j.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 selectedRow = j.getSelectedRow();
@@ -196,9 +175,25 @@ public class NoteDictionaryUi {
         });
 
         JScrollPane sp = new JScrollPane(j);
-        f.add(sp);
-        f.add(crud);
-        f.setSize(500,500);
+
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        c.gridheight = 0;
+        c.fill = GridBagConstraints.BOTH;
+        // c.anchor = GridBagConstraints.PAGE_START;
+        f.add(sp,c);
+
+
+        c.gridx = 4;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.gridheight = 0;
+        c.fill = GridBagConstraints.BOTH;
+        // c.anchor = GridBagConstraints.LINE_END;
+        f.add(crud, c);
+
+        f.setSize(720,480);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
 
