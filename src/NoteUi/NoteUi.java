@@ -1,5 +1,9 @@
+package NoteUi;
 import javax.swing.*; // UI implementation
 
+import Dictionary.Database;
+import Dictionary.phonemeInts;
+import Dictionary.phonemeStrings;
 import ResamplerEngine.temp;
 import ResamplerEngine.Phoneme;
 

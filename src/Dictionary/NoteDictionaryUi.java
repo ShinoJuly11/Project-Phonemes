@@ -1,3 +1,4 @@
+package Dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import NoteUi.NoteUi;
 import ResamplerEngine.Phoneme;
 
 import java.awt.GridBagConstraints;
@@ -126,6 +128,11 @@ public class NoteDictionaryUi {
     }
 
     public NoteDictionaryUi(){
+
+        Database sql = new Database();
+
+        sql.connectDatabase();
+        sql.createTable();
 
         updateTable();
         columnNames = new String[] {"File Name","Alias","Offset","Overlap","Consonant","Preuttrance","Cutoff","Comment"};

@@ -10,6 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import Dictionary.NoteDictionaryUi;
 import MidiLogicEngine.MidiConstructor;
 import NoteEditor.InterfaceGui;
 import NoteEditor.Mediator;
@@ -95,6 +96,45 @@ public class ButtonsForTable implements InterfaceGui{
 
                     //System.out.println(mediator.getTableEditor().getNoteArray().size());
                     //System.out.println("resampler process complete!");
+                }
+                catch(Exception e2){
+                    System.err.println(e2);
+                }
+            }
+        });
+
+        m5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                // Resampler resampler = new Resampler();
+                try{
+                    resampler.playback();
+                    resampler.save();
+                }
+                catch(Exception e2){
+                    System.err.println(e2);
+                }
+            }
+        });
+
+        menuBar.add(menu2);
+
+        JMenu menu3 = new JMenu("Notes");
+        JMenuItem m7 = new JMenuItem("Note Dictionary");
+        JMenuItem m8 = new JMenuItem("Placeholder");
+        JMenuItem m9 = new JMenuItem("Placeholder");
+
+        menu2.add(m7);
+        menu2.add(m8);
+        menu2.add(m9);
+
+        m4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                // Resampler resampler = new Resampler();
+                try{
+                    NoteDictionaryUi ndu = new NoteDictionaryUi();
+                    ndu.run();
                 }
                 catch(Exception e2){
                     System.err.println(e2);

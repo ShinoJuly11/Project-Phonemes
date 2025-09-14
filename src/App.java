@@ -3,10 +3,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.sound.sampled.*;
+
+import Dictionary.Database;
+import Dictionary.NoteDictionaryUi;
 import LEGACYFILES.ClipClass;
 import LEGACYFILES.SolaAlgorithm;
 import NoteEditor.EditorMediator;
 import NoteEditor.Mediator;
+import NoteUi.NoteUi;
 import Phonemizer.SentenceTokenizer;
 import ResamplerEngine.temp;
 import ResamplerEngine.Phoneme;
